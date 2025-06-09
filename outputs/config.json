@@ -1,0 +1,15 @@
+{
+  "data_refresh_interval": 300,
+  "anomaly_threshold": 0.1,
+  "prediction_horizon": 24,
+  "alert_thresholds": {
+    "high_load": 85,
+    "low_voltage": 215,
+    "high_voltage": 245
+  },
+  "dashboard_settings": {
+    "auto_refresh": true,
+    "theme": "bootstrap",
+    "charts_per_page": 8
+  }
+}

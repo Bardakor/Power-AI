@@ -63,8 +63,8 @@ def parser():
     )
     parser.add_argument(
         "--output-dir", "-o",
-        default="csv_output",
-        help="Directory where database-specific subdirectories and CSVs will be written (default: ./csv_output)"
+        default="outputs/csv_data",
+        help="Directory where database-specific subdirectories and CSVs will be written (default: ./outputs/csv_data)"
     )
     args = parser.parse_args()
 

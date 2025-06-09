@@ -36,3 +36,11 @@ typing_extensions==4.13.2
 tzdata==2025.2
 wcwidth==0.2.13
 xlrd==2.0.1
+matplotlib==3.8.2
+seaborn==0.13.0
+dash==3.0.4
+dash-bootstrap-components==2.0.3
+joblib==1.5.1
+plotly==6.1.2
+scikit-learn==1.7.0
+xgboost==3.0.2

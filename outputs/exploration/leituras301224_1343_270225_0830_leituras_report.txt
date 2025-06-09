@@ -1,0 +1,2348 @@
+DATA EXPLORATION REPORT
+==================================================
+
+Dataset: leituras301224_1343_270225_0830
+Table: leituras
+Generated: 2025-06-09 23:08:41
+
+BASIC INFORMATION
+--------------------
+Total Rows: 265,413
+Sample Rows: 10,000
+Columns: 165
+Memory Usage: 13.24 MB
+Duplicate Rows: 0
+
+COLUMN INFORMATION
+--------------------
+id                             | int64           | Missing: 0 (0.0%)
+data_hora                      | object          | Missing: 0 (0.0%)
+ups_work_mode                  | int64           | Missing: 0 (0.0%)
+ups_va_in                      | float64         | Missing: 0 (0.0%)
+ups_vb_in                      | float64         | Missing: 0 (0.0%)
+ups_vc_in                      | float64         | Missing: 0 (0.0%)
+ups_hz_in                      | float64         | Missing: 0 (0.0%)
+ups_va_out                     | float64         | Missing: 0 (0.0%)
+ups_vb_out                     | float64         | Missing: 0 (0.0%)
+ups_vc_out                     | float64         | Missing: 0 (0.0%)
+ups_hz_out                     | float64         | Missing: 0 (0.0%)
+ups_ia_out                     | float64         | Missing: 0 (0.0%)
+ups_ib_out                     | float64         | Missing: 0 (0.0%)
+ups_ic_out                     | float64         | Missing: 0 (0.0%)
+ups_pa                         | float64         | Missing: 0 (0.0%)
+ups_pb                         | float64         | Missing: 0 (0.0%)
+ups_pc                         | float64         | Missing: 0 (0.0%)
+ups_sa                         | float64         | Missing: 0 (0.0%)
+ups_sb                         | float64         | Missing: 0 (0.0%)
+ups_sc                         | float64         | Missing: 0 (0.0%)
+ups_load_a_out                 | float64         | Missing: 0 (0.0%)
+ups_load_b_out                 | float64         | Missing: 0 (0.0%)
+ups_load_c_out                 | float64         | Missing: 0 (0.0%)
+ups_load                       | float64         | Missing: 0 (0.0%)
+ups_load_sa                    | float64         | Missing: 0 (0.0%)
+ups_load_sb                    | float64         | Missing: 0 (0.0%)
+ups_load_sc                    | float64         | Missing: 0 (0.0%)
+ups_load_s                     | float64         | Missing: 0 (0.0%)
+ups_p_cell_v                   | float64         | Missing: 0 (0.0%)
+ups_n_cell_v                   | float64         | Missing: 0 (0.0%)
+ups_bat_i_charge               | float64         | Missing: 0 (0.0%)
+ups_bat_i_discharge            | float64         | Missing: 0 (0.0%)
+ups_bat_ah                     | float64         | Missing: 0 (0.0%)
+ups_byp_status                 | int64           | Missing: 0 (0.0%)
+ups_byp_va                     | float64         | Missing: 0 (0.0%)
+ups_byp_vb                     | float64         | Missing: 0 (0.0%)
+ups_byp_vc                     | float64         | Missing: 0 (0.0%)
+ups_byp_ia                     | float64         | Missing: 0 (0.0%)
+ups_byp_ib                     | float64         | Missing: 0 (0.0%)
+ups_byp_ic                     | float64         | Missing: 0 (0.0%)
+ups_byp_hz                     | float64         | Missing: 0 (0.0%)
+met_va_1                       | float64         | Missing: 0 (0.0%)
+met_vb_1                       | float64         | Missing: 0 (0.0%)
+met_vc_1                       | float64         | Missing: 0 (0.0%)
+met_v_1                        | float64         | Missing: 0 (0.0%)
+met_hz_1                       | float64         | Missing: 0 (0.0%)
+met_ia_1                       | float64         | Missing: 0 (0.0%)
+met_ib_1                       | float64         | Missing: 0 (0.0%)
+met_ic_1                       | float64         | Missing: 0 (0.0%)
+met_i_1                        | float64         | Missing: 0 (0.0%)
+met_in_1                       | float64         | Missing: 0 (0.0%)
+met_pa_1                       | float64         | Missing: 0 (0.0%)
+met_pb_1                       | float64         | Missing: 0 (0.0%)
+met_pc_1                       | float64         | Missing: 0 (0.0%)
+met_p_1                        | float64         | Missing: 0 (0.0%)
+met_sa_1                       | float64         | Missing: 0 (0.0%)
+met_sb_1                       | float64         | Missing: 0 (0.0%)
+met_sc_1                       | float64         | Missing: 0 (0.0%)
+met_s_1                        | float64         | Missing: 0 (0.0%)
+met_fpa_1                      | float64         | Missing: 0 (0.0%)
+met_fpb_1                      | float64         | Missing: 0 (0.0%)
+met_fpc_1                      | float64         | Missing: 0 (0.0%)
+met_fp_1                       | float64         | Missing: 0 (0.0%)
+met_kwh_1                      | float64         | Missing: 0 (0.0%)
+met_kvah_1                     | float64         | Missing: 0 (0.0%)
+met_kvah_neg_1                 | float64         | Missing: 0 (0.0%)
+met_va_seq_p_1                 | float64         | Missing: 0 (0.0%)
+met_va_seq_n_1                 | float64         | Missing: 0 (0.0%)
+met_va_zero_n_1                | float64         | Missing: 0 (0.0%)
+met_va_groud_1                 | float64         | Missing: 0 (0.0%)
+met_v_imb_1                    | float64         | Missing: 0 (0.0%)
+met_ia_seq_p_1                 | float64         | Missing: 0 (0.0%)
+met_ia_seq_n_1                 | float64         | Missing: 0 (0.0%)
+met_ia_zero_n_1                | float64         | Missing: 0 (0.0%)
+met_i_imb_1                    | float64         | Missing: 0 (0.0%)
+met_i_leak_1                   | float64         | Missing: 0 (0.0%)
+met_kwh_month_1                | float64         | Missing: 0 (0.0%)
+met_kwh_jan_1                  | float64         | Missing: 0 (0.0%)
+met_kwh_feb_1                  | float64         | Missing: 0 (0.0%)
+met_kwh_mar_1                  | float64         | Missing: 0 (0.0%)
+met_kwh_apr_1                  | float64         | Missing: 0 (0.0%)
+met_kwh_may_1                  | float64         | Missing: 0 (0.0%)
+met_kwh_jun_1                  | float64         | Missing: 0 (0.0%)
+met_kwh_jul_1                  | float64         | Missing: 0 (0.0%)
+met_kwh_aug_1                  | float64         | Missing: 0 (0.0%)
+met_kwh_set_1                  | float64         | Missing: 0 (0.0%)
+met_kwh_oct_1                  | float64         | Missing: 0 (0.0%)
+met_kwh_nov_1                  | float64         | Missing: 0 (0.0%)
+met_kwh_dec_1                  | float64         | Missing: 0 (0.0%)
+met_kwh_y_1                    | float64         | Missing: 0 (0.0%)
+met_kwh_1y_1                   | float64         | Missing: 0 (0.0%)
+met_va_2                       | float64         | Missing: 0 (0.0%)
+met_vb_2                       | float64         | Missing: 0 (0.0%)
+met_vc_2                       | float64         | Missing: 0 (0.0%)
+met_v_2                        | float64         | Missing: 0 (0.0%)
+met_hz_2                       | float64         | Missing: 0 (0.0%)
+met_ia_2                       | float64         | Missing: 0 (0.0%)
+met_ib_2                       | float64         | Missing: 0 (0.0%)
+met_ic_2                       | float64         | Missing: 0 (0.0%)
+met_i_2                        | float64         | Missing: 0 (0.0%)
+met_in_2                       | float64         | Missing: 0 (0.0%)
+met_pa_2                       | float64         | Missing: 0 (0.0%)
+met_pb_2                       | float64         | Missing: 0 (0.0%)
+met_pc_2                       | float64         | Missing: 0 (0.0%)
+met_p_2                        | float64         | Missing: 0 (0.0%)
+met_sa_2                       | float64         | Missing: 0 (0.0%)
+met_sb_2                       | float64         | Missing: 0 (0.0%)
+met_sc_2                       | float64         | Missing: 0 (0.0%)
+met_s_2                        | float64         | Missing: 0 (0.0%)
+met_fpa_2                      | float64         | Missing: 0 (0.0%)
+met_fpb_2                      | float64         | Missing: 0 (0.0%)
+met_fpc_2                      | float64         | Missing: 0 (0.0%)
+met_fp_2                       | float64         | Missing: 0 (0.0%)
+met_kwh_2                      | float64         | Missing: 0 (0.0%)
+met_kvah_2                     | float64         | Missing: 0 (0.0%)
+met_kvah_neg_2                 | float64         | Missing: 0 (0.0%)
+met_va_seq_p_2                 | float64         | Missing: 0 (0.0%)
+met_va_seq_n_2                 | float64         | Missing: 0 (0.0%)
+met_va_zero_n_2                | float64         | Missing: 0 (0.0%)
+met_va_groud_2                 | float64         | Missing: 0 (0.0%)
+met_v_imb_2                    | float64         | Missing: 0 (0.0%)
+met_ia_seq_p_2                 | float64         | Missing: 0 (0.0%)
+met_ia_seq_n_2                 | float64         | Missing: 0 (0.0%)
+met_ia_zero_n_2                | float64         | Missing: 0 (0.0%)
+met_i_imb_2                    | float64         | Missing: 0 (0.0%)
+met_i_leak_2                   | float64         | Missing: 0 (0.0%)
+met_kwh_month_2                | float64         | Missing: 0 (0.0%)
+met_kwh_jan_2                  | float64         | Missing: 0 (0.0%)
+met_kwh_feb_2                  | float64         | Missing: 0 (0.0%)
+met_kwh_mar_2                  | float64         | Missing: 0 (0.0%)
+met_kwh_apr_2                  | float64         | Missing: 0 (0.0%)
+met_kwh_may_2                  | float64         | Missing: 0 (0.0%)
+met_kwh_jun_2                  | float64         | Missing: 0 (0.0%)
+met_kwh_jul_2                  | float64         | Missing: 0 (0.0%)
+met_kwh_aug_2                  | float64         | Missing: 0 (0.0%)
+met_kwh_set_2                  | float64         | Missing: 0 (0.0%)
+met_kwh_oct_2                  | float64         | Missing: 0 (0.0%)
+met_kwh_nov_2                  | float64         | Missing: 0 (0.0%)
+met_kwh_dec_2                  | float64         | Missing: 0 (0.0%)
+met_kwh_y_2                    | float64         | Missing: 0 (0.0%)
+met_kwh_1y_2                   | float64         | Missing: 0 (0.0%)
+pdu1_i                         | float64         | Missing: 0 (0.0%)
+pdu1_fp                        | float64         | Missing: 0 (0.0%)
+pdu1_kwh                       | float64         | Missing: 0 (0.0%)
+pdu2_i                         | float64         | Missing: 0 (0.0%)
+pdu2_fp                        | float64         | Missing: 0 (0.0%)
+pdu2_kwh                       | float64         | Missing: 0 (0.0%)
+pdu3_i                         | float64         | Missing: 0 (0.0%)
+pdu3_fp                        | float64         | Missing: 0 (0.0%)
+pdu3_kwh                       | float64         | Missing: 0 (0.0%)
+pdu4_i                         | float64         | Missing: 0 (0.0%)
+pdu4_fp                        | float64         | Missing: 0 (0.0%)
+pdu4_kwh                       | float64         | Missing: 0 (0.0%)
+pdu5_i                         | float64         | Missing: 0 (0.0%)
+pdu5_fp                        | float64         | Missing: 0 (0.0%)
+pdu5_kwh                       | float64         | Missing: 0 (0.0%)
+pdu6_i                         | float64         | Missing: 0 (0.0%)
+pdu6_fp                        | float64         | Missing: 0 (0.0%)
+pdu6_kwh                       | float64         | Missing: 0 (0.0%)
+pdu7_i                         | float64         | Missing: 0 (0.0%)
+pdu7_fp                        | float64         | Missing: 0 (0.0%)
+pdu7_kwh                       | float64         | Missing: 0 (0.0%)
+pdu8_i                         | float64         | Missing: 0 (0.0%)
+pdu8_fp                        | float64         | Missing: 0 (0.0%)
+pdu8_kwh                       | float64         | Missing: 0 (0.0%)
+
+NUMERIC ANALYSIS
+--------------------
+
+id:
+  Count: 10,000
+  Mean: 132164.66
+  Median: 131120.00
+  Std Dev: 76837.09
+  Min: 18.00
+  Max: 265386.00
+  Q25: 65525.00
+  Q75: 199347.75
+  Skewness: 0.01
+  Zeros: 0
+  Negative: 0
+
+ups_work_mode:
+  Count: 10,000
+  Mean: 4.00
+  Median: 4.00
+  Std Dev: 0.02
+  Min: 4.00
+  Max: 5.00
+  Q25: 4.00
+  Q75: 4.00
+  Skewness: 57.72
+  Zeros: 0
+  Negative: 0
+
+ups_va_in:
+  Count: 10,000
+  Mean: 232.13
+  Median: 232.30
+  Std Dev: 4.61
+  Min: 0.00
+  Max: 237.70
+  Q25: 230.80
+  Q75: 233.70
+  Skewness: -38.50
+  Zeros: 3
+  Negative: 0
+
+ups_vb_in:
+  Count: 10,000
+  Mean: 232.70
+  Median: 232.90
+  Std Dev: 4.60
+  Min: 0.00
+  Max: 238.40
+  Q25: 231.40
+  Q75: 234.30
+  Skewness: -38.97
+  Zeros: 3
+  Negative: 0
+
+ups_vc_in:
+  Count: 10,000
+  Mean: 232.22
+  Median: 232.40
+  Std Dev: 4.47
+  Min: 0.00
+  Max: 238.20
+  Q25: 231.00
+  Q75: 233.60
+  Skewness: -42.17
+  Zeros: 3
+  Negative: 0
+
+ups_hz_in:
+  Count: 10,000
+  Mean: 59.93
+  Median: 60.00
+  Std Dev: 1.04
+  Min: 0.00
+  Max: 60.30
+  Q25: 59.90
+  Q75: 60.00
+  Skewness: -57.33
+  Zeros: 3
+  Negative: 0
+
+ups_va_out:
+  Count: 10,000
+  Mean: 219.24
+  Median: 219.20
+  Std Dev: 0.17
+  Min: 218.30
+  Max: 219.90
+  Q25: 219.20
+  Q75: 219.40
+  Skewness: 0.10
+  Zeros: 0
+  Negative: 0
+
+ups_vb_out:
+  Count: 10,000
+  Mean: 219.26
+  Median: 219.20
+  Std Dev: 0.20
+  Min: 218.30
+  Max: 220.10
+  Q25: 219.20
+  Q75: 219.40
+  Skewness: 0.06
+  Zeros: 0
+  Negative: 0
+
+ups_vc_out:
+  Count: 10,000
+  Mean: 219.89
+  Median: 219.90
+  Std Dev: 0.22
+  Min: 219.20
+  Max: 220.60
+  Q25: 219.90
+  Q75: 220.10
+  Skewness: -0.27
+  Zeros: 0
+  Negative: 0
+
+ups_hz_out:
+  Count: 10,000
+  Mean: 59.95
+  Median: 59.90
+  Std Dev: 0.28
+  Min: 43.70
+  Max: 60.60
+  Q25: 59.80
+  Q75: 60.10
+  Skewness: -38.46
+  Zeros: 0
+  Negative: 0
+
+ups_ia_out:
+  Count: 10,000
+  Mean: 11.93
+  Median: 11.80
+  Std Dev: 0.81
+  Min: 9.30
+  Max: 18.20
+  Q25: 11.30
+  Q75: 12.40
+  Skewness: 0.99
+  Zeros: 0
+  Negative: 0
+
+ups_ib_out:
+  Count: 10,000
+  Mean: 8.88
+  Median: 9.10
+  Std Dev: 0.65
+  Min: 6.30
+  Max: 12.40
+  Q25: 8.50
+  Q75: 9.30
+  Skewness: 0.22
+  Zeros: 0
+  Negative: 0
+
+ups_ic_out:
+  Count: 10,000
+  Mean: 9.89
+  Median: 9.90
+  Std Dev: 0.73
+  Min: 6.00
+  Max: 13.50
+  Q25: 9.60
+  Q75: 10.20
+  Skewness: 0.17
+  Zeros: 0
+  Negative: 0
+
+ups_pa:
+  Count: 10,000
+  Mean: 2313.39
+  Median: 2302.50
+  Std Dev: 165.42
+  Min: 1878.00
+  Max: 3399.00
+  Q25: 2193.00
+  Q75: 2389.00
+  Skewness: 1.17
+  Zeros: 0
+  Negative: 0
+
+ups_pb:
+  Count: 10,000
+  Mean: 1571.42
+  Median: 1587.00
+  Std Dev: 136.31
+  Min: 1121.00
+  Max: 2228.00
+  Q25: 1483.00
+  Q75: 1650.00
+  Skewness: 0.22
+  Zeros: 0
+  Negative: 0
+
+ups_pc:
+  Count: 10,000
+  Mean: 1673.65
+  Median: 1660.00
+  Std Dev: 143.29
+  Min: 1145.00
+  Max: 2446.00
+  Q25: 1584.00
+  Q75: 1735.00
+  Skewness: 0.85
+  Zeros: 0
+  Negative: 0
+
+ups_sa:
+  Count: 10,000
+  Mean: 2632.27
+  Median: 2611.00
+  Std Dev: 176.97
+  Min: 2004.00
+  Max: 4357.00
+  Q25: 2490.00
+  Q75: 2732.00
+  Skewness: 1.09
+  Zeros: 0
+  Negative: 0
+
+ups_sb:
+  Count: 10,000
+  Mean: 1960.77
+  Median: 1949.00
+  Std Dev: 146.05
+  Min: 1398.00
+  Max: 2732.00
+  Q25: 1881.00
+  Q75: 2063.00
+  Skewness: 0.26
+  Zeros: 0
+  Negative: 0
+
+ups_sc:
+  Count: 10,000
+  Mean: 2184.25
+  Median: 2184.00
+  Std Dev: 159.66
+  Min: 1336.00
+  Max: 2977.00
+  Q25: 2119.00
+  Q75: 2249.00
+  Skewness: 0.19
+  Zeros: 0
+  Negative: 0
+
+ups_load_a_out:
+  Count: 10,000
+  Mean: 29.71
+  Median: 30.00
+  Std Dev: 2.17
+  Min: 24.00
+  Max: 40.00
+  Q25: 28.00
+  Q75: 31.00
+  Skewness: 1.05
+  Zeros: 0
+  Negative: 0
+
+ups_load_b_out:
+  Count: 10,000
+  Mean: 19.90
+  Median: 20.00
+  Std Dev: 1.78
+  Min: 14.00
+  Max: 29.00
+  Q25: 19.00
+  Q75: 21.00
+  Skewness: 0.15
+  Zeros: 0
+  Negative: 0
+
+ups_load_c_out:
+  Count: 10,000
+  Mean: 21.24
+  Median: 21.00
+  Std Dev: 1.87
+  Min: 14.00
+  Max: 32.00
+  Q25: 20.00
+  Q75: 22.00
+  Skewness: 0.84
+  Zeros: 0
+  Negative: 0
+
+ups_load:
+  Count: 10,000
+  Mean: 23.70
+  Median: 24.00
+  Std Dev: 1.65
+  Min: 19.00
+  Max: 30.00
+  Q25: 23.00
+  Q75: 24.00
+  Skewness: 0.33
+  Zeros: 0
+  Negative: 0
+
+ups_load_sa:
+  Count: 10,000
+  Mean: 12.63
+  Median: 13.00
+  Std Dev: 0.87
+  Min: 10.00
+  Max: 17.00
+  Q25: 12.00
+  Q75: 13.00
+  Skewness: 0.58
+  Zeros: 0
+  Negative: 0
+
+ups_load_sb:
+  Count: 10,000
+  Mean: 9.18
+  Median: 9.00
+  Std Dev: 0.81
+  Min: 6.00
+  Max: 13.00
+  Q25: 9.00
+  Q75: 10.00
+  Skewness: 0.09
+  Zeros: 0
+  Negative: 0
+
+ups_load_sc:
+  Count: 10,000
+  Mean: 10.26
+  Median: 10.00
+  Std Dev: 0.81
+  Min: 6.00
+  Max: 14.00
+  Q25: 10.00
+  Q75: 11.00
+  Skewness: 0.25
+  Zeros: 0
+  Negative: 0
+
+ups_load_s:
+  Count: 10,000
+  Mean: 23.69
+  Median: 24.00
+  Std Dev: 1.65
+  Min: 19.00
+  Max: 30.00
+  Q25: 23.00
+  Q75: 24.00
+  Skewness: 0.37
+  Zeros: 0
+  Negative: 0
+
+ups_p_cell_v:
+  Count: 10,000
+  Mean: 274.49
+  Median: 274.40
+  Std Dev: 0.65
+  Min: 246.70
+  Max: 275.60
+  Q25: 274.10
+  Q75: 274.80
+  Skewness: -22.85
+  Zeros: 0
+  Negative: 0
+
+ups_n_cell_v:
+  Count: 10,000
+  Mean: 274.73
+  Median: 274.80
+  Std Dev: 0.78
+  Min: 243.50
+  Max: 276.40
+  Q25: 274.20
+  Q75: 275.30
+  Skewness: -19.09
+  Zeros: 0
+  Negative: 0
+
+ups_bat_i_charge:
+  Count: 10,000
+  Mean: 0.00
+  Median: 0.00
+  Std Dev: 0.08
+  Min: 0.00
+  Max: 4.80
+  Q25: 0.00
+  Q75: 0.00
+  Skewness: 57.74
+  Zeros: 9,997
+  Negative: 0
+
+ups_bat_i_discharge:
+  Count: 10,000
+  Mean: 0.01
+  Median: 0.00
+  Std Dev: 0.03
+  Min: 0.00
+  Max: 0.30
+  Q25: 0.00
+  Q75: 0.00
+  Skewness: 2.25
+  Zeros: 8,708
+  Negative: 0
+
+ups_bat_ah:
+  Count: 10,000
+  Mean: 99.98
+  Median: 100.00
+  Std Dev: 1.37
+  Min: 6.00
+  Max: 100.00
+  Q25: 100.00
+  Q75: 100.00
+  Skewness: -63.54
+  Zeros: 0
+  Negative: 0
+
+ups_byp_status:
+  Count: 10,000
+  Mean: 0.00
+  Median: 0.00
+  Std Dev: 0.00
+  Min: 0.00
+  Max: 0.00
+  Q25: 0.00
+  Q75: 0.00
+  Skewness: 0.00
+  Zeros: 10,000
+  Negative: 0
+
+ups_byp_va:
+  Count: 10,000
+  Mean: 230.26
+  Median: 230.50
+  Std Dev: 4.81
+  Min: 0.00
+  Max: 237.70
+  Q25: 228.60
+  Q75: 232.10
+  Skewness: -33.00
+  Zeros: 3
+  Negative: 0
+
+ups_byp_vb:
+  Count: 10,000
+  Mean: 229.60
+  Median: 229.80
+  Std Dev: 5.09
+  Min: 0.00
+  Max: 237.70
+  Q25: 227.40
+  Q75: 231.90
+  Skewness: -27.54
+  Zeros: 3
+  Negative: 0
+
+ups_byp_vc:
+  Count: 10,000
+  Mean: 229.00
+  Median: 229.30
+  Std Dev: 4.84
+  Min: 0.00
+  Max: 236.80
+  Q25: 227.20
+  Q75: 231.20
+  Skewness: -31.88
+  Zeros: 3
+  Negative: 0
+
+ups_byp_ia:
+  Count: 10,000
+  Mean: 0.00
+  Median: 0.00
+  Std Dev: 0.00
+  Min: 0.00
+  Max: 0.00
+  Q25: 0.00
+  Q75: 0.00
+  Skewness: 0.00
+  Zeros: 10,000
+  Negative: 0
+
+ups_byp_ib:
+  Count: 10,000
+  Mean: 0.00
+  Median: 0.00
+  Std Dev: 0.00
+  Min: 0.00
+  Max: 0.00
+  Q25: 0.00
+  Q75: 0.00
+  Skewness: 0.00
+  Zeros: 10,000
+  Negative: 0
+
+ups_byp_ic:
+  Count: 10,000
+  Mean: 0.00
+  Median: 0.00
+  Std Dev: 0.00
+  Min: 0.00
+  Max: 0.00
+  Q25: 0.00
+  Q75: 0.00
+  Skewness: 0.00
+  Zeros: 10,000
+  Negative: 0
+
+ups_byp_hz:
+  Count: 10,000
+  Mean: 59.94
+  Median: 60.00
+  Std Dev: 1.05
+  Min: 0.00
+  Max: 60.60
+  Q25: 59.90
+  Q75: 60.00
+  Skewness: -55.73
+  Zeros: 3
+  Negative: 0
+
+met_va_1:
+  Count: 10,000
+  Mean: 230.84
+  Median: 231.00
+  Std Dev: 2.23
+  Min: 218.90
+  Max: 236.30
+  Q25: 229.50
+  Q75: 232.40
+  Skewness: -0.81
+  Zeros: 0
+  Negative: 0
+
+met_vb_1:
+  Count: 10,000
+  Mean: 231.17
+  Median: 231.30
+  Std Dev: 2.20
+  Min: 220.60
+  Max: 236.70
+  Q25: 229.80
+  Q75: 232.70
+  Skewness: -0.64
+  Zeros: 0
+  Negative: 0
+
+met_vc_1:
+  Count: 10,000
+  Mean: 229.97
+  Median: 230.10
+  Std Dev: 1.97
+  Min: 221.60
+  Max: 235.70
+  Q25: 228.70
+  Q75: 231.40
+  Skewness: -0.50
+  Zeros: 0
+  Negative: 0
+
+met_v_1:
+  Count: 10,000
+  Mean: 230.66
+  Median: 230.80
+  Std Dev: 2.12
+  Min: 220.60
+  Max: 236.10
+  Q25: 229.40
+  Q75: 232.10
+  Skewness: -0.65
+  Zeros: 0
+  Negative: 0
+
+met_hz_1:
+  Count: 10,000
+  Mean: 60.00
+  Median: 60.00
+  Std Dev: 0.03
+  Min: 59.80
+  Max: 60.10
+  Q25: 60.00
+  Q75: 60.00
+  Skewness: -0.06
+  Zeros: 0
+  Negative: 0
+
+met_ia_1:
+  Count: 10,000
+  Mean: 23.46
+  Median: 23.73
+  Std Dev: 1.04
+  Min: 21.00
+  Max: 25.90
+  Q25: 22.42
+  Q75: 24.24
+  Skewness: -0.36
+  Zeros: 0
+  Negative: 0
+
+met_ib_1:
+  Count: 10,000
+  Mean: 10.69
+  Median: 10.70
+  Std Dev: 0.56
+  Min: 8.96
+  Max: 12.88
+  Q25: 10.30
+  Q75: 10.93
+  Skewness: 0.49
+  Zeros: 0
+  Negative: 0
+
+met_ic_1:
+  Count: 10,000
+  Mean: 9.33
+  Median: 9.33
+  Std Dev: 0.54
+  Min: 7.80
+  Max: 11.52
+  Q25: 8.99
+  Q75: 9.55
+  Skewness: 0.58
+  Zeros: 0
+  Negative: 0
+
+met_i_1:
+  Count: 10,000
+  Mean: 14.49
+  Median: 14.61
+  Std Dev: 0.67
+  Min: 12.77
+  Max: 16.68
+  Q25: 14.01
+  Q75: 14.89
+  Skewness: -0.02
+  Zeros: 0
+  Negative: 0
+
+met_in_1:
+  Count: 10,000
+  Mean: 19.63
+  Median: 19.86
+  Std Dev: 0.76
+  Min: 16.76
+  Max: 21.37
+  Q25: 18.83
+  Q75: 20.19
+  Skewness: -0.31
+  Zeros: 0
+  Negative: 0
+
+met_pa_1:
+  Count: 10,000
+  Mean: 4.27
+  Median: 4.34
+  Std Dev: 0.22
+  Min: 3.83
+  Max: 4.86
+  Q25: 4.07
+  Q75: 4.42
+  Skewness: -0.33
+  Zeros: 0
+  Negative: 0
+
+met_pb_1:
+  Count: 10,000
+  Mean: 2.33
+  Median: 2.33
+  Std Dev: 0.13
+  Min: 1.93
+  Max: 2.82
+  Q25: 2.24
+  Q75: 2.38
+  Skewness: 0.30
+  Zeros: 0
+  Negative: 0
+
+met_pc_1:
+  Count: 10,000
+  Mean: 2.03
+  Median: 2.03
+  Std Dev: 0.12
+  Min: 1.68
+  Max: 2.50
+  Q25: 1.95
+  Q75: 2.08
+  Skewness: 0.50
+  Zeros: 0
+  Negative: 0
+
+met_p_1:
+  Count: 10,000
+  Mean: 8.63
+  Median: 8.71
+  Std Dev: 0.44
+  Min: 7.47
+  Max: 10.09
+  Q25: 8.34
+  Q75: 8.86
+  Skewness: 0.05
+  Zeros: 0
+  Negative: 0
+
+met_sa_1:
+  Count: 10,000
+  Mean: 5.41
+  Median: 5.49
+  Std Dev: 0.23
+  Min: 4.83
+  Max: 5.87
+  Q25: 5.16
+  Q75: 5.60
+  Skewness: -0.49
+  Zeros: 0
+  Negative: 0
+
+met_sb_1:
+  Count: 10,000
+  Mean: 2.47
+  Median: 2.48
+  Std Dev: 0.12
+  Min: 2.10
+  Max: 2.96
+  Q25: 2.39
+  Q75: 2.53
+  Skewness: 0.30
+  Zeros: 0
+  Negative: 0
+
+met_sc_1:
+  Count: 10,000
+  Mean: 2.15
+  Median: 2.15
+  Std Dev: 0.12
+  Min: 1.80
+  Max: 2.63
+  Q25: 2.07
+  Q75: 2.20
+  Skewness: 0.49
+  Zeros: 0
+  Negative: 0
+
+met_s_1:
+  Count: 10,000
+  Mean: 10.03
+  Median: 10.14
+  Std Dev: 0.45
+  Min: 8.86
+  Max: 11.39
+  Q25: 9.70
+  Q75: 10.31
+  Skewness: -0.21
+  Zeros: 0
+  Negative: 0
+
+met_fpa_1:
+  Count: 10,000
+  Mean: -0.79
+  Median: -0.79
+  Std Dev: 0.01
+  Min: -0.84
+  Max: -0.75
+  Q25: -0.80
+  Q75: -0.78
+  Skewness: -0.59
+  Zeros: 0
+  Negative: 10,000
+
+met_fpb_1:
+  Count: 10,000
+  Mean: -0.94
+  Median: -0.94
+  Std Dev: 0.01
+  Min: -0.96
+  Max: -0.90
+  Q25: -0.95
+  Q75: -0.94
+  Skewness: 1.27
+  Zeros: 0
+  Negative: 10,000
+
+met_fpc_1:
+  Count: 10,000
+  Mean: -0.94
+  Median: -0.94
+  Std Dev: 0.00
+  Min: -0.95
+  Max: -0.92
+  Q25: -0.95
+  Q75: -0.94
+  Skewness: 0.64
+  Zeros: 0
+  Negative: 10,000
+
+met_fp_1:
+  Count: 10,000
+  Mean: -0.86
+  Median: -0.86
+  Std Dev: 0.01
+  Min: -0.90
+  Max: -0.83
+  Q25: -0.87
+  Q75: -0.85
+  Skewness: -0.43
+  Zeros: 0
+  Negative: 10,000
+
+met_kwh_1:
+  Count: 10,000
+  Mean: 46557.73
+  Median: 46478.78
+  Std Dev: 1999.91
+  Min: 43281.10
+  Max: 53443.55
+  Q25: 44791.47
+  Q75: 48295.81
+  Skewness: 0.14
+  Zeros: 0
+  Negative: 0
+
+met_kvah_1:
+  Count: 10,000
+  Mean: 0.00
+  Median: 0.00
+  Std Dev: 0.00
+  Min: 0.00
+  Max: 0.00
+  Q25: 0.00
+  Q75: 0.00
+  Skewness: 0.00
+  Zeros: 10,000
+  Negative: 0
+
+met_kvah_neg_1:
+  Count: 10,000
+  Mean: 8451.95
+  Median: 8445.25
+  Std Dev: 332.47
+  Min: 7897.80
+  Max: 9594.25
+  Q25: 8160.50
+  Q75: 8738.91
+  Skewness: 0.12
+  Zeros: 0
+  Negative: 0
+
+met_va_seq_p_1:
+  Count: 10,000
+  Mean: 230.61
+  Median: 230.75
+  Std Dev: 2.12
+  Min: 220.40
+  Max: 236.10
+  Q25: 229.30
+  Q75: 232.10
+  Skewness: -0.66
+  Zeros: 0
+  Negative: 0
+
+met_va_seq_n_1:
+  Count: 10,000
+  Mean: 0.83
+  Median: 0.80
+  Std Dev: 0.17
+  Min: 0.30
+  Max: 1.70
+  Q25: 0.70
+  Q75: 0.90
+  Skewness: 0.38
+  Zeros: 0
+  Negative: 0
+
+met_va_zero_n_1:
+  Count: 10,000
+  Mean: 0.75
+  Median: 0.70
+  Std Dev: 0.16
+  Min: 0.30
+  Max: 1.60
+  Q25: 0.60
+  Q75: 0.80
+  Skewness: 1.06
+  Zeros: 0
+  Negative: 0
+
+met_va_groud_1:
+  Count: 10,000
+  Mean: 3.17
+  Median: 2.50
+  Std Dev: 0.94
+  Min: 1.50
+  Max: 6.40
+  Q25: 2.30
+  Q75: 3.90
+  Skewness: 0.50
+  Zeros: 0
+  Negative: 0
+
+met_v_imb_1:
+  Count: 10,000
+  Mean: 0.36
+  Median: 0.40
+  Std Dev: 0.08
+  Min: 0.10
+  Max: 0.80
+  Q25: 0.30
+  Q75: 0.40
+  Skewness: 0.36
+  Zeros: 0
+  Negative: 0
+
+met_ia_seq_p_1:
+  Count: 10,000
+  Mean: 12.59
+  Median: 12.72
+  Std Dev: 0.84
+  Min: 0.98
+  Max: 15.01
+  Q25: 12.14
+  Q75: 13.00
+  Skewness: -2.05
+  Zeros: 0
+  Negative: 0
+
+met_ia_seq_n_1:
+  Count: 10,000
+  Mean: 3.10
+  Median: 3.09
+  Std Dev: 0.42
+  Min: 2.41
+  Max: 10.00
+  Q25: 2.92
+  Q75: 3.18
+  Skewness: 7.80
+  Zeros: 0
+  Negative: 0
+
+met_ia_zero_n_1:
+  Count: 10,000
+  Mean: 3.38
+  Median: 3.36
+  Std Dev: 0.48
+  Min: 2.62
+  Max: 9.98
+  Q25: 3.24
+  Q75: 3.43
+  Skewness: 6.54
+  Zeros: 0
+  Negative: 0
+
+met_i_imb_1:
+  Count: 10,000
+  Mean: 24.78
+  Median: 24.10
+  Std Dev: 5.32
+  Min: 19.00
+  Max: 100.00
+  Q25: 23.50
+  Q75: 24.70
+  Skewness: 9.74
+  Zeros: 0
+  Negative: 0
+
+met_i_leak_1:
+  Count: 10,000
+  Mean: 0.00
+  Median: 0.00
+  Std Dev: 0.00
+  Min: 0.00
+  Max: 0.00
+  Q25: 0.00
+  Q75: 0.00
+  Skewness: 0.00
+  Zeros: 10,000
+  Negative: 0
+
+met_kwh_month_1:
+  Count: 10,000
+  Mean: 3202.74
+  Median: 3171.03
+  Std Dev: 1998.86
+  Min: 0.10
+  Max: 7170.05
+  Q25: 1427.90
+  Q75: 4912.59
+  Skewness: 0.12
+  Zeros: 0
+  Negative: 0
+
+met_kwh_jan_1:
+  Count: 10,000
+  Mean: 7138.50
+  Median: 7170.35
+  Std Dev: 148.29
+  Min: 6445.80
+  Max: 7170.35
+  Q25: 7170.35
+  Q75: 7170.35
+  Skewness: -4.44
+  Zeros: 0
+  Negative: 0
+
+met_kwh_feb_1:
+  Count: 10,000
+  Mean: 6464.49
+  Median: 6445.80
+  Std Dev: 98.22
+  Min: 6445.80
+  Max: 7170.35
+  Q25: 6445.80
+  Q75: 6445.80
+  Skewness: 6.07
+  Zeros: 0
+  Negative: 0
+
+met_kwh_mar_1:
+  Count: 10,000
+  Mean: 6682.22
+  Median: 6712.90
+  Std Dev: 156.94
+  Min: 5793.90
+  Max: 6712.90
+  Q25: 6712.90
+  Q75: 6712.90
+  Skewness: -5.30
+  Zeros: 0
+  Negative: 0
+
+met_kwh_apr_1:
+  Count: 10,000
+  Mean: 5789.32
+  Median: 5793.90
+  Std Dev: 156.47
+  Min: 5157.40
+  Max: 6712.90
+  Q25: 5793.90
+  Q75: 5793.90
+  Skewness: 1.20
+  Zeros: 0
+  Negative: 0
+
+met_kwh_may_1:
+  Count: 10,000
+  Mean: 5160.81
+  Median: 5157.40
+  Std Dev: 86.21
+  Min: 4943.60
+  Max: 5793.90
+  Q25: 5157.40
+  Q75: 5157.40
+  Skewness: 5.52
+  Zeros: 0
+  Negative: 0
+
+met_kwh_jun_1:
+  Count: 10,000
+  Mean: 4913.78
+  Median: 4943.60
+  Std Dev: 193.59
+  Min: 3803.85
+  Max: 5157.40
+  Q25: 4943.60
+  Q75: 4943.60
+  Skewness: -5.43
+  Zeros: 0
+  Negative: 0
+
+met_kwh_jul_1:
+  Count: 10,000
+  Mean: 3799.85
+  Median: 3803.85
+  Std Dev: 187.40
+  Min: 3072.40
+  Max: 4943.60
+  Q25: 3803.85
+  Q75: 3803.85
+  Skewness: 1.74
+  Zeros: 0
+  Negative: 0
+
+met_kwh_aug_1:
+  Count: 10,000
+  Mean: 3004.93
+  Median: 3072.40
+  Std Dev: 464.87
+  Min: 365.10
+  Max: 3803.85
+  Q25: 3072.40
+  Q75: 3072.40
+  Skewness: -5.23
+  Zeros: 0
+  Negative: 0
+
+met_kwh_set_1:
+  Count: 10,000
+  Mean: 395.39
+  Median: 365.10
+  Std Dev: 337.10
+  Min: 0.00
+  Max: 3072.40
+  Q25: 365.10
+  Q75: 365.10
+  Skewness: 7.52
+  Zeros: 290
+  Negative: 0
+
+met_kwh_oct_1:
+  Count: 10,000
+  Mean: 5.52
+  Median: 0.00
+  Std Dev: 44.53
+  Min: 0.00
+  Max: 365.10
+  Q25: 0.00
+  Q75: 0.00
+  Skewness: 7.95
+  Zeros: 9,559
+  Negative: 0
+
+met_kwh_nov_1:
+  Count: 10,000
+  Mean: 0.19
+  Median: 0.20
+  Std Dev: 0.04
+  Min: 0.00
+  Max: 0.20
+  Q25: 0.20
+  Q75: 0.20
+  Skewness: -4.44
+  Zeros: 441
+  Negative: 0
+
+met_kwh_dec_1:
+  Count: 10,000
+  Mean: 0.00
+  Median: 0.00
+  Std Dev: 0.02
+  Min: 0.00
+  Max: 0.20
+  Q25: 0.00
+  Q75: 0.00
+  Skewness: 7.95
+  Zeros: 9,849
+  Negative: 0
+
+met_kwh_y_1:
+  Count: 10,000
+  Mean: 4352.73
+  Median: 3265.15
+  Std Dev: 7013.33
+  Min: 0.10
+  Max: 43465.00
+  Q25: 1495.95
+  Q75: 5036.99
+  Skewness: 4.96
+  Zeros: 0
+  Negative: 0
+
+met_kwh_1y_1:
+  Count: 10,000
+  Mean: 42204.81
+  Median: 43465.30
+  Std Dev: 7294.09
+  Min: 0.20
+  Max: 43465.30
+  Q25: 43465.30
+  Q75: 43465.30
+  Skewness: -5.61
+  Zeros: 0
+  Negative: 0
+
+met_va_2:
+  Count: 10,000
+  Mean: 219.60
+  Median: 219.60
+  Std Dev: 0.06
+  Min: 219.40
+  Max: 219.80
+  Q25: 219.60
+  Q75: 219.60
+  Skewness: 0.00
+  Zeros: 0
+  Negative: 0
+
+met_vb_2:
+  Count: 10,000
+  Mean: 219.50
+  Median: 219.50
+  Std Dev: 0.06
+  Min: 219.30
+  Max: 219.70
+  Q25: 219.50
+  Q75: 219.50
+  Skewness: -0.03
+  Zeros: 0
+  Negative: 0
+
+met_vc_2:
+  Count: 10,000
+  Mean: 219.58
+  Median: 219.60
+  Std Dev: 0.06
+  Min: 219.40
+  Max: 219.80
+  Q25: 219.50
+  Q75: 219.60
+  Skewness: -0.02
+  Zeros: 0
+  Negative: 0
+
+met_v_2:
+  Count: 10,000
+  Mean: 219.56
+  Median: 219.60
+  Std Dev: 0.06
+  Min: 219.40
+  Max: 219.80
+  Q25: 219.50
+  Q75: 219.60
+  Skewness: -0.07
+  Zeros: 0
+  Negative: 0
+
+met_hz_2:
+  Count: 10,000
+  Mean: 60.00
+  Median: 60.00
+  Std Dev: 0.03
+  Min: 59.80
+  Max: 60.20
+  Q25: 60.00
+  Q75: 60.00
+  Skewness: -0.24
+  Zeros: 0
+  Negative: 0
+
+met_ia_2:
+  Count: 10,000
+  Mean: 10.10
+  Median: 10.06
+  Std Dev: 0.29
+  Min: 9.65
+  Max: 11.95
+  Q25: 9.90
+  Q75: 10.19
+  Skewness: 1.91
+  Zeros: 0
+  Negative: 0
+
+met_ib_2:
+  Count: 10,000
+  Mean: 6.97
+  Median: 6.74
+  Std Dev: 0.40
+  Min: 5.20
+  Max: 8.10
+  Q25: 6.69
+  Q75: 7.48
+  Skewness: 0.56
+  Zeros: 0
+  Negative: 0
+
+met_ic_2:
+  Count: 10,000
+  Mean: 6.07
+  Median: 5.92
+  Std Dev: 0.28
+  Min: 4.18
+  Max: 6.99
+  Q25: 5.87
+  Q75: 6.27
+  Skewness: -0.05
+  Zeros: 0
+  Negative: 0
+
+met_i_2:
+  Count: 10,000
+  Mean: 7.71
+  Median: 7.62
+  Std Dev: 0.27
+  Min: 6.81
+  Max: 8.69
+  Q25: 7.53
+  Q75: 7.88
+  Skewness: 1.10
+  Zeros: 0
+  Negative: 0
+
+met_in_2:
+  Count: 10,000
+  Mean: 4.78
+  Median: 4.85
+  Std Dev: 0.35
+  Min: 3.73
+  Max: 8.04
+  Q25: 4.64
+  Q75: 4.99
+  Skewness: 0.33
+  Zeros: 0
+  Negative: 0
+
+met_pa_2:
+  Count: 10,000
+  Mean: 2.05
+  Median: 2.04
+  Std Dev: 0.07
+  Min: 1.94
+  Max: 2.48
+  Q25: 2.00
+  Q75: 2.07
+  Skewness: 1.81
+  Zeros: 0
+  Negative: 0
+
+met_pb_2:
+  Count: 10,000
+  Mean: 1.32
+  Median: 1.27
+  Std Dev: 0.09
+  Min: 0.93
+  Max: 1.58
+  Q25: 1.26
+  Q75: 1.43
+  Skewness: 0.69
+  Zeros: 0
+  Negative: 0
+
+met_pc_2:
+  Count: 10,000
+  Mean: 1.12
+  Median: 1.09
+  Std Dev: 0.06
+  Min: 0.80
+  Max: 1.32
+  Q25: 1.07
+  Q75: 1.16
+  Skewness: 0.39
+  Zeros: 0
+  Negative: 0
+
+met_p_2:
+  Count: 10,000
+  Mean: 4.48
+  Median: 4.43
+  Std Dev: 0.17
+  Min: 3.86
+  Max: 5.14
+  Q25: 4.36
+  Q75: 4.59
+  Skewness: 1.14
+  Zeros: 0
+  Negative: 0
+
+met_sa_2:
+  Count: 10,000
+  Mean: 2.22
+  Median: 2.21
+  Std Dev: 0.06
+  Min: 2.12
+  Max: 2.62
+  Q25: 2.17
+  Q75: 2.24
+  Skewness: 1.90
+  Zeros: 0
+  Negative: 0
+
+met_sb_2:
+  Count: 10,000
+  Mean: 1.53
+  Median: 1.48
+  Std Dev: 0.09
+  Min: 1.14
+  Max: 1.78
+  Q25: 1.47
+  Q75: 1.64
+  Skewness: 0.56
+  Zeros: 0
+  Negative: 0
+
+met_sc_2:
+  Count: 10,000
+  Mean: 1.33
+  Median: 1.30
+  Std Dev: 0.06
+  Min: 0.92
+  Max: 1.54
+  Q25: 1.29
+  Q75: 1.38
+  Skewness: -0.05
+  Zeros: 0
+  Negative: 0
+
+met_s_2:
+  Count: 10,000
+  Mean: 5.08
+  Median: 5.02
+  Std Dev: 0.18
+  Min: 4.48
+  Max: 5.73
+  Q25: 4.96
+  Q75: 5.19
+  Skewness: 1.10
+  Zeros: 0
+  Negative: 0
+
+met_fpa_2:
+  Count: 10,000
+  Mean: -0.92
+  Median: -0.92
+  Std Dev: 0.00
+  Min: -0.94
+  Max: -0.91
+  Q25: -0.93
+  Q75: -0.92
+  Skewness: -0.89
+  Zeros: 0
+  Negative: 10,000
+
+met_fpb_2:
+  Count: 10,000
+  Mean: -0.86
+  Median: -0.86
+  Std Dev: 0.01
+  Min: -0.91
+  Max: -0.80
+  Q25: -0.87
+  Q75: -0.85
+  Skewness: -0.61
+  Zeros: 0
+  Negative: 10,000
+
+met_fpc_2:
+  Count: 10,000
+  Mean: -0.84
+  Median: -0.84
+  Std Dev: 0.01
+  Min: -0.88
+  Max: -0.80
+  Q25: -0.84
+  Q75: -0.83
+  Skewness: -0.75
+  Zeros: 0
+  Negative: 10,000
+
+met_fp_2:
+  Count: 10,000
+  Mean: -0.88
+  Median: -0.88
+  Std Dev: 0.00
+  Min: -0.92
+  Max: -0.86
+  Q25: -0.88
+  Q75: -0.88
+  Skewness: -1.25
+  Zeros: 0
+  Negative: 10,000
+
+met_kwh_2:
+  Count: 10,000
+  Mean: 23587.25
+  Median: 23551.76
+  Std Dev: 1016.98
+  Min: 21880.18
+  Max: 27202.20
+  Q25: 22714.15
+  Q75: 24452.80
+  Skewness: 0.14
+  Zeros: 0
+  Negative: 0
+
+met_kvah_2:
+  Count: 10,000
+  Mean: 0.00
+  Median: 0.00
+  Std Dev: 0.00
+  Min: 0.00
+  Max: 0.00
+  Q25: 0.00
+  Q75: 0.00
+  Skewness: 0.00
+  Zeros: 10,000
+  Negative: 0
+
+met_kvah_neg_2:
+  Count: 10,000
+  Mean: 11124.00
+  Median: 11106.29
+  Std Dev: 502.60
+  Min: 10282.30
+  Max: 12844.28
+  Q25: 10689.97
+  Q75: 11554.65
+  Skewness: 0.13
+  Zeros: 0
+  Negative: 0
+
+met_va_seq_p_2:
+  Count: 10,000
+  Mean: 219.56
+  Median: 219.60
+  Std Dev: 0.06
+  Min: 219.40
+  Max: 219.70
+  Q25: 219.50
+  Q75: 219.60
+  Skewness: -0.09
+  Zeros: 0
+  Negative: 0
+
+met_va_seq_n_2:
+  Count: 10,000
+  Mean: 0.16
+  Median: 0.20
+  Std Dev: 0.05
+  Min: 0.00
+  Max: 0.40
+  Q25: 0.10
+  Q75: 0.20
+  Skewness: -0.25
+  Zeros: 106
+  Negative: 0
+
+met_va_zero_n_2:
+  Count: 10,000
+  Mean: 0.14
+  Median: 0.10
+  Std Dev: 0.06
+  Min: 0.00
+  Max: 0.40
+  Q25: 0.10
+  Q75: 0.20
+  Skewness: -0.04
+  Zeros: 245
+  Negative: 0
+
+met_va_groud_2:
+  Count: 10,000
+  Mean: 3.17
+  Median: 2.50
+  Std Dev: 0.94
+  Min: 1.50
+  Max: 6.40
+  Q25: 2.30
+  Q75: 3.90
+  Skewness: 0.50
+  Zeros: 0
+  Negative: 0
+
+met_v_imb_2:
+  Count: 10,000
+  Mean: 0.09
+  Median: 0.10
+  Std Dev: 0.03
+  Min: 0.00
+  Max: 0.20
+  Q25: 0.10
+  Q75: 0.10
+  Skewness: -2.23
+  Zeros: 1,134
+  Negative: 0
+
+met_ia_seq_p_2:
+  Count: 10,000
+  Mean: 7.58
+  Median: 7.48
+  Std Dev: 0.27
+  Min: 6.66
+  Max: 8.57
+  Q25: 7.40
+  Q75: 7.76
+  Skewness: 1.10
+  Zeros: 0
+  Negative: 0
+
+met_ia_seq_n_2:
+  Count: 10,000
+  Mean: 1.23
+  Median: 1.25
+  Std Dev: 0.12
+  Min: 0.89
+  Max: 2.40
+  Q25: 1.18
+  Q75: 1.30
+  Skewness: 1.37
+  Zeros: 0
+  Negative: 0
+
+met_ia_zero_n_2:
+  Count: 10,000
+  Mean: 1.36
+  Median: 1.38
+  Std Dev: 0.12
+  Min: 0.97
+  Max: 2.42
+  Q25: 1.30
+  Q75: 1.44
+  Skewness: 0.58
+  Zeros: 0
+  Negative: 0
+
+met_i_imb_2:
+  Count: 10,000
+  Mean: 16.30
+  Median: 16.80
+  Std Dev: 1.83
+  Min: 11.00
+  Max: 34.50
+  Q25: 15.40
+  Q75: 17.40
+  Skewness: 1.50
+  Zeros: 0
+  Negative: 0
+
+met_i_leak_2:
+  Count: 10,000
+  Mean: 0.00
+  Median: 0.00
+  Std Dev: 0.00
+  Min: 0.00
+  Max: 0.00
+  Q25: 0.00
+  Q75: 0.00
+  Skewness: 0.00
+  Zeros: 10,000
+  Negative: 0
+
+met_kwh_month_2:
+  Count: 10,000
+  Mean: 1669.31
+  Median: 1645.44
+  Std Dev: 1030.31
+  Min: 0.04
+  Max: 3960.90
+  Q25: 783.11
+  Q75: 2514.37
+  Skewness: 0.18
+  Zeros: 0
+  Negative: 0
+
+met_kwh_jan_2:
+  Count: 10,000
+  Mean: 3936.99
+  Median: 3961.08
+  Std Dev: 112.80
+  Min: 3335.44
+  Max: 3961.08
+  Q25: 3961.08
+  Q75: 3961.08
+  Skewness: -4.53
+  Zeros: 0
+  Negative: 0
+
+met_kwh_feb_2:
+  Count: 10,000
+  Mean: 3466.03
+  Median: 3456.16
+  Std Dev: 62.66
+  Min: 3456.16
+  Max: 3961.08
+  Q25: 3456.16
+  Q75: 3456.16
+  Skewness: 7.48
+  Zeros: 0
+  Negative: 0
+
+met_kwh_mar_2:
+  Count: 10,000
+  Mean: 3514.17
+  Median: 3533.68
+  Std Dev: 106.34
+  Min: 2901.30
+  Max: 3533.68
+  Q25: 3533.68
+  Q75: 3533.68
+  Skewness: -5.55
+  Zeros: 0
+  Negative: 0
+
+met_kwh_apr_2:
+  Count: 10,000
+  Mean: 2894.47
+  Median: 2901.30
+  Std Dev: 123.49
+  Min: 2336.36
+  Max: 3533.68
+  Q25: 2901.30
+  Q75: 2901.30
+  Skewness: -0.58
+  Zeros: 0
+  Negative: 0
+
+met_kwh_may_2:
+  Count: 10,000
+  Mean: 2339.87
+  Median: 2336.36
+  Std Dev: 75.35
+  Min: 2163.18
+  Max: 2901.30
+  Q25: 2336.36
+  Q75: 2336.36
+  Skewness: 5.87
+  Zeros: 0
+  Negative: 0
+
+met_kwh_jun_2:
+  Count: 10,000
+  Mean: 2166.33
+  Median: 2163.18
+  Std Dev: 21.28
+  Min: 2163.18
+  Max: 2336.36
+  Q25: 2163.18
+  Q75: 2163.18
+  Skewness: 7.71
+  Zeros: 0
+  Negative: 0
+
+met_kwh_jul_2:
+  Count: 10,000
+  Mean: 2158.65
+  Median: 2181.62
+  Std Dev: 131.27
+  Min: 1399.24
+  Max: 2181.62
+  Q25: 2181.62
+  Q75: 2181.62
+  Skewness: -5.61
+  Zeros: 0
+  Negative: 0
+
+met_kwh_aug_2:
+  Count: 10,000
+  Mean: 1371.92
+  Median: 1399.24
+  Std Dev: 247.61
+  Min: 49.78
+  Max: 2181.62
+  Q25: 1399.24
+  Q75: 1399.24
+  Skewness: -3.89
+  Zeros: 0
+  Negative: 0
+
+met_kwh_set_2:
+  Count: 10,000
+  Mean: 68.71
+  Median: 49.78
+  Std Dev: 164.97
+  Min: 0.00
+  Max: 1399.24
+  Q25: 49.78
+  Q75: 49.78
+  Skewness: 7.92
+  Zeros: 290
+  Negative: 0
+
+met_kwh_oct_2:
+  Count: 10,000
+  Mean: 0.75
+  Median: 0.00
+  Std Dev: 6.07
+  Min: 0.00
+  Max: 49.78
+  Q25: 0.00
+  Q75: 0.00
+  Skewness: 7.95
+  Zeros: 9,559
+  Negative: 0
+
+met_kwh_nov_2:
+  Count: 10,000
+  Mean: 0.04
+  Median: 0.04
+  Std Dev: 0.01
+  Min: 0.00
+  Max: 0.04
+  Q25: 0.04
+  Q75: 0.04
+  Skewness: -4.44
+  Zeros: 441
+  Negative: 0
+
+met_kwh_dec_2:
+  Count: 10,000
+  Mean: 0.00
+  Median: 0.00
+  Std Dev: 0.00
+  Min: 0.00
+  Max: 0.04
+  Q25: 0.00
+  Q75: 0.00
+  Skewness: 7.95
+  Zeros: 9,849
+  Negative: 0
+
+met_kwh_y_2:
+  Count: 10,000
+  Mean: 2242.30
+  Median: 1690.21
+  Std Dev: 3540.41
+  Min: 0.04
+  Max: 21982.24
+  Q25: 818.96
+  Q75: 2577.67
+  Skewness: 4.95
+  Zeros: 0
+  Negative: 0
+
+met_kwh_1y_2:
+  Count: 10,000
+  Mean: 21344.93
+  Median: 21982.42
+  Std Dev: 3688.97
+  Min: 0.04
+  Max: 21982.42
+  Q25: 21982.42
+  Q75: 21982.42
+  Skewness: -5.61
+  Zeros: 0
+  Negative: 0
+
+pdu1_i:
+  Count: 10,000
+  Mean: 1.73
+  Median: 1.72
+  Std Dev: 0.03
+  Min: 1.67
+  Max: 1.79
+  Q25: 1.71
+  Q75: 1.77
+  Skewness: 0.56
+  Zeros: 0
+  Negative: 0
+
+pdu1_fp:
+  Count: 10,000
+  Mean: 0.85
+  Median: 0.84
+  Std Dev: 0.01
+  Min: 0.81
+  Max: 0.87
+  Q25: 0.84
+  Q75: 0.86
+  Skewness: 0.30
+  Zeros: 0
+  Negative: 0
+
+pdu1_kwh:
+  Count: 10,000
+  Mean: 2093.32
+  Median: 2091.40
+  Std Dev: 73.83
+  Min: 1968.60
+  Max: 2344.40
+  Q25: 2029.60
+  Q75: 2157.00
+  Skewness: 0.11
+  Zeros: 0
+  Negative: 0
+
+pdu2_i:
+  Count: 10,000
+  Mean: 0.24
+  Median: 0.24
+  Std Dev: 0.01
+  Min: 0.21
+  Max: 0.26
+  Q25: 0.24
+  Q75: 0.24
+  Skewness: -0.33
+  Zeros: 0
+  Negative: 0
+
+pdu2_fp:
+  Count: 10,000
+  Mean: 0.45
+  Median: 0.44
+  Std Dev: 0.02
+  Min: 0.40
+  Max: 0.52
+  Q25: 0.44
+  Q75: 0.46
+  Skewness: 0.29
+  Zeros: 0
+  Negative: 0
+
+pdu2_kwh:
+  Count: 10,000
+  Mean: 152.36
+  Median: 152.20
+  Std Dev: 5.48
+  Min: 143.10
+  Max: 170.80
+  Q25: 147.60
+  Q75: 157.10
+  Skewness: 0.11
+  Zeros: 0
+  Negative: 0
+
+pdu3_i:
+  Count: 10,000
+  Mean: 2.12
+  Median: 2.13
+  Std Dev: 0.09
+  Min: 0.45
+  Max: 2.61
+  Q25: 2.12
+  Q75: 2.13
+  Skewness: -18.30
+  Zeros: 0
+  Negative: 0
+
+pdu3_fp:
+  Count: 10,000
+  Mean: 0.59
+  Median: 0.59
+  Std Dev: 0.01
+  Min: 0.57
+  Max: 0.77
+  Q25: 0.59
+  Q75: 0.59
+  Skewness: 12.77
+  Zeros: 0
+  Negative: 0
+
+pdu3_kwh:
+  Count: 10,000
+  Mean: 501.91
+  Median: 500.15
+  Std Dev: 63.58
+  Min: 394.70
+  Max: 736.60
+  Q25: 447.20
+  Q75: 556.60
+  Skewness: 0.14
+  Zeros: 0
+  Negative: 0
+
+pdu4_i:
+  Count: 10,000
+  Mean: 2.62
+  Median: 2.63
+  Std Dev: 0.10
+  Min: 0.75
+  Max: 3.11
+  Q25: 2.62
+  Q75: 2.64
+  Skewness: -18.38
+  Zeros: 0
+  Negative: 0
+
+pdu4_fp:
+  Count: 10,000
+  Mean: 0.66
+  Median: 0.66
+  Std Dev: 0.01
+  Min: 0.65
+  Max: 0.80
+  Q25: 0.66
+  Q75: 0.66
+  Skewness: 12.37
+  Zeros: 0
+  Negative: 0
+
+pdu4_kwh:
+  Count: 10,000
+  Mean: 661.66
+  Median: 659.35
+  Std Dev: 87.73
+  Min: 513.50
+  Max: 975.10
+  Q25: 586.10
+  Q75: 737.23
+  Skewness: 0.13
+  Zeros: 0
+  Negative: 0
+
+pdu5_i:
+  Count: 10,000
+  Mean: 4.09
+  Median: 4.05
+  Std Dev: 0.18
+  Min: 3.81
+  Max: 5.31
+  Q25: 3.97
+  Q75: 4.13
+  Skewness: 2.02
+  Zeros: 0
+  Negative: 0
+
+pdu5_fp:
+  Count: 10,000
+  Mean: 0.94
+  Median: 0.94
+  Std Dev: 0.01
+  Min: 0.85
+  Max: 0.99
+  Q25: 0.93
+  Q75: 0.94
+  Skewness: -0.61
+  Zeros: 0
+  Negative: 0
+
+pdu5_kwh:
+  Count: 10,000
+  Mean: 5336.40
+  Median: 5332.05
+  Std Dev: 191.37
+  Min: 5012.60
+  Max: 6033.90
+  Q25: 5171.70
+  Q75: 5500.23
+  Skewness: 0.12
+  Zeros: 0
+  Negative: 0
+
+pdu6_i:
+  Count: 10,000
+  Mean: 4.24
+  Median: 4.22
+  Std Dev: 0.13
+  Min: 4.00
+  Max: 5.09
+  Q25: 4.15
+  Q75: 4.29
+  Skewness: 1.48
+  Zeros: 0
+  Negative: 0
+
+pdu6_fp:
+  Count: 10,000
+  Mean: 0.93
+  Median: 0.93
+  Std Dev: 0.01
+  Min: 0.84
+  Max: 0.99
+  Q25: 0.92
+  Q75: 0.93
+  Skewness: -0.46
+  Zeros: 0
+  Negative: 0
+
+pdu6_kwh:
+  Count: 10,000
+  Mean: 5609.68
+  Median: 5604.80
+  Std Dev: 196.46
+  Min: 5276.60
+  Max: 6312.80
+  Q25: 5441.10
+  Q75: 5778.50
+  Skewness: 0.12
+  Zeros: 0
+  Negative: 0
+
+pdu7_i:
+  Count: 10,000
+  Mean: 4.24
+  Median: 4.00
+  Std Dev: 0.39
+  Min: 2.46
+  Max: 5.33
+  Q25: 3.95
+  Q75: 4.75
+  Skewness: 0.80
+  Zeros: 0
+  Negative: 0
+
+pdu7_fp:
+  Count: 10,000
+  Mean: 0.94
+  Median: 0.94
+  Std Dev: 0.02
+  Min: 0.83
+  Max: 0.99
+  Q25: 0.93
+  Q75: 0.95
+  Skewness: -0.36
+  Zeros: 0
+  Negative: 0
+
+pdu7_kwh:
+  Count: 10,000
+  Mean: 4206.88
+  Median: 4195.35
+  Std Dev: 198.08
+  Min: 3880.80
+  Max: 4912.90
+  Q25: 4037.80
+  Q75: 4371.10
+  Skewness: 0.21
+  Zeros: 0
+  Negative: 0
+
+pdu8_i:
+  Count: 10,000
+  Mean: 3.40
+  Median: 3.25
+  Std Dev: 0.26
+  Min: 2.49
+  Max: 4.19
+  Q25: 3.20
+  Q75: 3.60
+  Skewness: 0.83
+  Zeros: 0
+  Negative: 0
+
+pdu8_fp:
+  Count: 10,000
+  Mean: 0.93
+  Median: 0.93
+  Std Dev: 0.02
+  Min: 0.82
+  Max: 0.99
+  Q25: 0.93
+  Q75: 0.94
+  Skewness: -0.53
+  Zeros: 0
+  Negative: 0
+
+pdu8_kwh:
+  Count: 10,000
+  Mean: 3540.74
+  Median: 3533.55
+  Std Dev: 157.79
+  Min: 3277.80
+  Max: 4083.20
+  Q25: 3405.60
+  Q75: 3674.03
+  Skewness: 0.16
+  Zeros: 0
+  Negative: 0
+
+CATEGORICAL ANALYSIS
+--------------------
+
+data_hora:
+  Unique Values: 10,000
+  Mode: 2024-12-30 13:45:57
+  Top Values:
+    2024-12-30 13:45:57: 1
+    2025-01-20 20:51:15: 1
+    2025-01-20 20:18:46: 1
+    2025-01-20 20:19:17: 1
+    2025-01-20 20:37:11: 1
+    2025-01-20 20:42:55: 1
+    2025-01-20 20:43:27: 1
+    2025-01-20 20:44:19: 1
+    2025-01-20 20:45:32: 1
+    2025-01-20 20:55:02: 1
+
+DATETIME ANALYSIS
+--------------------
+
+data_hora:
+  Date Range: 2024-12-30 13:45:57 to 2025-02-16 17:36:57
+  Range (days): 48
+  Unique Dates: 10,000
+  Null Dates: 0
+
+VISUALIZATIONS
+--------------------
+Visualizations saved to: exploration_results/leituras301224_1343_270225_0830_leituras_visualizations

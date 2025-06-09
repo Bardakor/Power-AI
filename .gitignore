@@ -16,3 +16,9 @@ Thumbs.db
 csv_output/
 *.db
 *.xlsx
+
+data/
+*.csv
+
+*.html
+*.pkl
