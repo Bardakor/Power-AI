@@ -194,26 +194,48 @@ class PowerAIDashboard:
             try:
                 import sys
                 sys.path.append('.')
-                from tools.ml_engine import PowerAIPredictor
+                from tools.advanced_ml_engine import AdvancedPowerAIPredictor
+                
                 df = pd.read_json(dataset_json, orient='split')
                 df.index = pd.to_datetime(df.index)
                 
-                predictor = PowerAIPredictor()
-                df_features = predictor.engineer_features(df.copy())
-                consumption_results = predictor.train_consumption_model(df_features)
-                anomaly_df = predictor.detect_anomalies(df_features)
-                future_predictions = predictor.predict_future(df_features, hours_ahead=24)
-                optimizations = predictor.optimize_system(df_features)
+                # Initialize advanced predictor
+                predictor = AdvancedPowerAIPredictor()
                 
-                return {
-                    'consumption_mae': consumption_results['mae'],
-                    'consumption_r2': consumption_results['r2'],
-                    'anomaly_count': anomaly_df['is_anomaly'].sum(),
-                    'future_predictions': future_predictions.to_json(date_format='iso', orient='split'),
-                    'optimizations': optimizations,
-                    'timestamp': datetime.now().isoformat()
+                # Feature engineering
+                df = predictor.engineer_features(df)
+                
+                # Train models
+                results = {}
+                targets = ['ups_total_power', 'met1_total_power', 'ups_load']
+                
+                for target in targets:
+                    if target in df.columns:
+                        model_result = predictor.train_advanced_models(df, target)
+                        results[target] = model_result
+                        
+                        # Future predictions
+                        future_pred = predictor.predict_future_advanced(df, target, hours_ahead=24)
+                        if future_pred is not None:
+                            results[f'{target}_future'] = future_pred.to_json(date_format='iso', orient='split')
+                
+                # Anomaly detection
+                df = predictor.detect_advanced_anomalies(df)
+                anomalies = {
+                    'total': int(df['is_any_anomaly'].sum()),
+                    'percentage': float(df['is_any_anomaly'].mean() * 100),
+                    'data': df[df['is_any_anomaly']].index.strftime('%Y-%m-%d %H:%M:%S').tolist()
                 }
+                results['anomalies'] = anomalies
+                
+                # System insights
+                insights = predictor.generate_insights(df, results)
+                results['insights'] = insights
+                
+                return results
+                
             except Exception as e:
+                print(f"ML Analysis Error: {e}")
                 return {'error': str(e)}
         
         @self.app.callback(
@@ -261,45 +283,120 @@ class PowerAIDashboard:
     
     def create_predictions_tab(self, df, ml_results):
         if not ml_results or 'error' in ml_results:
-            return dbc.Alert("Run ML Analysis to see predictions", color="info")
+            return dbc.Alert("⚡ Run ML Analysis to see advanced predictions", color="info")
+        
+        # Model performance cards
+        performance_cards = []
+        targets = ['ups_total_power', 'met1_total_power', 'ups_load']
+        target_names = {'ups_total_power': 'UPS Power', 'met1_total_power': 'Meter 1 Power', 'ups_load': 'UPS Load'}
+        
+        for target in targets:
+            if target in ml_results:
+                result = ml_results[target]
+                performance_cards.append(
+                    dbc.Col([
+                        dbc.Card([
+                            dbc.CardHeader(f"🎯 {target_names.get(target, target)}"),
+                            dbc.CardBody([
+                                html.H4(f"R² = {result.get('r2', 0):.3f}", className="text-success"),
+                                html.P(f"MAE: {result.get('mae', 0):.1f}"),
+                                html.P(f"Model: {result.get('model_name', 'XGBoost')}", className="text-muted")
+                            ])
+                        ])
+                    ], width=4)
+                )
         
         content = [
-            dbc.Row([
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardHeader("🎯 Model Performance"),
-                        dbc.CardBody([
-                            html.P(f"Prediction Accuracy (R²): {ml_results.get('consumption_r2', 0):.3f}"),
-                            html.P(f"Mean Absolute Error: {ml_results.get('consumption_mae', 0):.2f} kW")
-                        ])
-                    ])
-                ], width=6),
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardHeader("🔮 System Recommendations"),
-                        dbc.CardBody([
-                            html.Ul([html.Li(opt) for opt in ml_results.get('optimizations', [])])
-                        ])
-                    ])
-                ], width=6)
-            ])
+            dbc.Row(performance_cards, className="mb-4")
         ]
         
-        if 'future_predictions' in ml_results:
-            future_df = pd.read_json(ml_results['future_predictions'], orient='split')
-            future_df.index = pd.to_datetime(future_df.index)
+        # System insights
+        if 'insights' in ml_results:
+            insights = ml_results['insights']
+            recommendations = insights.get('recommendations', [])
             
-            fig_forecast = go.Figure()
-            fig_forecast.add_trace(go.Scatter(x=df.index[-100:], y=df['ups_pa'][-100:], 
-                                            name='Historical', line=dict(color='blue')))
-            fig_forecast.add_trace(go.Scatter(x=future_df.index, y=future_df['predicted_power'], 
-                                            name='Forecast', line=dict(color='red', dash='dash')))
-            fig_forecast.update_layout(title="24-Hour Power Consumption Forecast", 
-                                     xaxis_title="Time", yaxis_title="Power (kW)")
-            
-            content.append(dbc.Row([
-                dbc.Col([dcc.Graph(figure=fig_forecast)], width=12)
-            ], className="mt-4"))
+            if recommendations:
+                content.append(
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Card([
+                                dbc.CardHeader("💡 System Recommendations"),
+                                dbc.CardBody([
+                                    html.Ul([html.Li(rec) for rec in recommendations[:5]])
+                                ])
+                            ])
+                        ], width=12)
+                    ], className="mb-4")
+                )
+        
+        # Future predictions plots
+        prediction_plots = []
+        for target in targets:
+            future_key = f'{target}_future'
+            if future_key in ml_results:
+                try:
+                    future_df = pd.read_json(ml_results[future_key], orient='split')
+                    future_df.index = pd.to_datetime(future_df.index)
+                    
+                    fig_forecast = go.Figure()
+                    
+                    # Historical data (last 100 points)
+                    if target in df.columns:
+                        historical_data = df[target].dropna().tail(100)
+                        fig_forecast.add_trace(go.Scatter(
+                            x=historical_data.index, 
+                            y=historical_data.values,
+                            name='Historical', 
+                            line=dict(color='blue', width=2)
+                        ))
+                    
+                    # Future predictions
+                    pred_col = f'predicted_{target}'
+                    if pred_col in future_df.columns:
+                        fig_forecast.add_trace(go.Scatter(
+                            x=future_df.index, 
+                            y=future_df[pred_col],
+                            name='24h Forecast', 
+                            line=dict(color='red', dash='dash', width=3)
+                        ))
+                    
+                    fig_forecast.update_layout(
+                        title=f"24-Hour {target_names.get(target, target)} Forecast",
+                        xaxis_title="Time", 
+                        yaxis_title="Value",
+                        template="plotly_white",
+                        height=400
+                    )
+                    
+                    prediction_plots.append(
+                        dbc.Col([dcc.Graph(figure=fig_forecast)], width=6)
+                    )
+                except Exception as e:
+                    print(f"Error creating plot for {target}: {e}")
+        
+        if prediction_plots:
+            # Arrange plots in rows of 2
+            for i in range(0, len(prediction_plots), 2):
+                row_plots = prediction_plots[i:i+2]
+                content.append(dbc.Row(row_plots, className="mb-4"))
+        
+        # Anomaly summary
+        if 'anomalies' in ml_results:
+            anomalies = ml_results['anomalies']
+            content.append(
+                dbc.Row([
+                    dbc.Col([
+                        dbc.Card([
+                            dbc.CardHeader("🚨 Anomaly Detection Summary"),
+                            dbc.CardBody([
+                                html.H4(f"{anomalies.get('total', 0)} anomalies", className="text-warning"),
+                                html.P(f"{anomalies.get('percentage', 0):.2f}% of data points"),
+                                html.P("Check Anomalies tab for detailed analysis", className="text-muted")
+                            ])
+                        ])
+                    ], width=12)
+                ], className="mb-4")
+            )
         
         return html.Div(content)
     
@@ -349,40 +446,160 @@ class PowerAIDashboard:
     
     def create_anomalies_tab(self, df, ml_results):
         if not ml_results or 'error' in ml_results:
-            return dbc.Alert("Run ML Analysis to detect anomalies", color="info")
+            return dbc.Alert("⚡ Run ML Analysis to detect anomalies with advanced methods", color="info")
         
-        anomaly_count = ml_results.get('anomaly_count', 0)
+        # Get anomaly information from advanced ML results
+        anomalies_info = ml_results.get('anomalies', {})
+        anomaly_count = anomalies_info.get('total', 0)
+        anomaly_percentage = anomalies_info.get('percentage', 0)
         
+        content = [
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("🚨 Advanced Anomaly Detection Results"),
+                        dbc.CardBody([
+                            html.H3(f"{anomaly_count} anomalies found", className="text-warning"),
+                            html.P(f"{anomaly_percentage:.2f}% of total data points"),
+                            html.P("Using statistical Z-score and Isolation Forest methods", className="text-muted")
+                        ])
+                    ])
+                ], width=12)
+            ], className="mb-4")
+        ]
+        
+        # Create anomaly visualization if we have the data
         try:
+            # Try to use stored ML predictor results or recreate them
             import sys
             sys.path.append('.')
-            from tools.ml_engine import PowerAIPredictor
-            predictor = PowerAIPredictor()
-            df_features = predictor.engineer_features(df.copy())
-            df_anomalies = predictor.detect_anomalies(df_features)
+            from tools.advanced_ml_engine import AdvancedPowerAIPredictor
             
-            normal_data = df_anomalies[~df_anomalies['is_anomaly']]
-            anomaly_data = df_anomalies[df_anomalies['is_anomaly']]
+            predictor = AdvancedPowerAIPredictor()
+            df_copy = df.copy()
+            df_features = predictor.engineer_features(df_copy)
+            df_anomalies = predictor.detect_advanced_anomalies(df_features)
             
-            fig_anomalies = go.Figure()
-            fig_anomalies.add_trace(go.Scatter(x=normal_data.index, y=normal_data['ups_load'],
-                                             mode='markers', name='Normal', opacity=0.6))
+            # Create visualization
+            normal_data = df_anomalies[~df_anomalies['is_any_anomaly']]
+            anomaly_data = df_anomalies[df_anomalies['is_any_anomaly']]
+            
+            # Power anomalies plot
+            fig_power = go.Figure()
+            
+            if 'ups_total_power' in df_anomalies.columns:
+                fig_power.add_trace(go.Scatter(
+                    x=normal_data.index, 
+                    y=normal_data['ups_total_power'],
+                    mode='markers', 
+                    name='Normal', 
+                    opacity=0.6,
+                    marker=dict(color='blue', size=4)
+                ))
+                
+                if not anomaly_data.empty:
+                    fig_power.add_trace(go.Scatter(
+                        x=anomaly_data.index, 
+                        y=anomaly_data['ups_total_power'],
+                        mode='markers', 
+                        name='Anomaly', 
+                        marker=dict(color='red', size=8, symbol='x')
+                    ))
+                
+                fig_power.update_layout(
+                    title="Power Consumption Anomalies",
+                    xaxis_title="Time", 
+                    yaxis_title="Total Power (W)",
+                    template="plotly_white",
+                    height=400
+                )
+            
+            # Load anomalies plot
+            fig_load = go.Figure()
+            fig_load.add_trace(go.Scatter(
+                x=normal_data.index, 
+                y=normal_data['ups_load'],
+                mode='markers', 
+                name='Normal', 
+                opacity=0.6,
+                marker=dict(color='green', size=4)
+            ))
+            
             if not anomaly_data.empty:
-                fig_anomalies.add_trace(go.Scatter(x=anomaly_data.index, y=anomaly_data['ups_load'],
-                                                 mode='markers', name='Anomaly', 
-                                                 marker=dict(color='red', size=8)))
+                fig_load.add_trace(go.Scatter(
+                    x=anomaly_data.index, 
+                    y=anomaly_data['ups_load'],
+                    mode='markers', 
+                    name='Anomaly', 
+                    marker=dict(color='red', size=8, symbol='x')
+                ))
             
-            fig_anomalies.update_layout(title="Anomaly Detection Results", 
-                                      xaxis_title="Time", yaxis_title="UPS Load (%)")
+            fig_load.update_layout(
+                title="UPS Load Anomalies",
+                xaxis_title="Time", 
+                yaxis_title="UPS Load (%)",
+                template="plotly_white",
+                height=400
+            )
             
-            return dbc.Row([
-                dbc.Col([
-                    dbc.Alert(f"Found {anomaly_count} anomalies in the data", color="warning"),
-                    dcc.Graph(figure=fig_anomalies)
-                ], width=12)
+            # Anomaly score distribution
+            fig_scores = go.Figure()
+            fig_scores.add_trace(go.Histogram(
+                x=df_anomalies['anomaly_score'],
+                nbinsx=50,
+                name='Anomaly Scores',
+                marker_color='orange'
+            ))
+            fig_scores.update_layout(
+                title="Anomaly Score Distribution",
+                xaxis_title="Anomaly Score", 
+                yaxis_title="Frequency",
+                template="plotly_white",
+                height=400
+            )
+            
+            content.extend([
+                dbc.Row([
+                    dbc.Col([dcc.Graph(figure=fig_power)], width=6),
+                    dbc.Col([dcc.Graph(figure=fig_load)], width=6)
+                ], className="mb-4"),
+                dbc.Row([
+                    dbc.Col([dcc.Graph(figure=fig_scores)], width=12)
+                ], className="mb-4")
             ])
-        except:
-            return dbc.Alert("ML Engine not available for anomaly detection", color="danger")
+            
+            # Anomaly timeline
+            if not anomaly_data.empty:
+                daily_anomalies = anomaly_data.resample('D').size()
+                
+                fig_timeline = go.Figure()
+                fig_timeline.add_trace(go.Bar(
+                    x=daily_anomalies.index,
+                    y=daily_anomalies.values,
+                    name='Daily Anomalies',
+                    marker_color='red'
+                ))
+                fig_timeline.update_layout(
+                    title="Anomaly Timeline (Daily Count)",
+                    xaxis_title="Date", 
+                    yaxis_title="Number of Anomalies",
+                    template="plotly_white",
+                    height=400
+                )
+                
+                content.append(
+                    dbc.Row([
+                        dbc.Col([dcc.Graph(figure=fig_timeline)], width=12)
+                    ], className="mb-4")
+                )
+            
+        except Exception as e:
+            print(f"Error creating anomaly visualizations: {e}")
+            content.append(
+                dbc.Alert(f"Could not create detailed visualizations: {str(e)}", color="warning")
+            )
+        
+        return html.Div(content)
     
     def run_server(self, debug=True, port=8050):
         self.app.run(debug=debug, port=port)
