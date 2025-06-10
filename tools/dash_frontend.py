@@ -10,6 +10,7 @@ import numpy as np
 from pathlib import Path
 from datetime import datetime, timedelta
 import json
+from io import StringIO
 
 class PowerAIDashboard:
     def __init__(self, data_dir="outputs/csv_data"):
@@ -35,9 +36,9 @@ class PowerAIDashboard:
         self.app.layout = dbc.Container([
             dbc.Row([
                 dbc.Col([
-                    html.H1("⚡ Power AI Dashboard", className="text-center mb-4",
+                    html.H1("🔬 Power AI MLOps Dashboard", className="text-center mb-4",
                            style={'color': '#2E86AB', 'fontWeight': 'bold'}),
-                    html.P("Real-time power monitoring with ML predictions", 
+                    html.P("Real-time power monitoring with optimized ML predictions and correlation analysis", 
                           className="text-center text-muted mb-4")
                 ])
             ]),
@@ -76,7 +77,7 @@ class PowerAIDashboard:
                             html.Hr(),
                             dbc.Row([
                                 dbc.Col([
-                                    dbc.Button("🤖 Run ML Analysis", id="ml-button", color="primary", className="me-2"),
+                                    dbc.Button("🔬 Run MLOps Analysis", id="ml-button", color="primary", className="me-2"),
                                     dbc.Button("📊 Generate Report", id="report-button", color="success", className="me-2"),
                                     dbc.Button("🔄 Refresh Data", id="refresh-button", color="info")
                                 ])
@@ -138,7 +139,7 @@ class PowerAIDashboard:
             if not dataset_json:
                 return html.P("No data available")
             
-            df = pd.read_json(dataset_json, orient='split')
+            df = pd.read_json(StringIO(dataset_json), orient='split')
             df.index = pd.to_datetime(df.index)
             
             current_load = df['ups_load'].iloc[-1] if not df.empty else 0
@@ -194,48 +195,74 @@ class PowerAIDashboard:
             try:
                 import sys
                 sys.path.append('.')
-                from tools.advanced_ml_engine import AdvancedPowerAIPredictor
+                from tools.mlops_advanced_engine import MLOpsAdvancedEngine
+                import joblib
                 
-                df = pd.read_json(dataset_json, orient='split')
+                df = pd.read_json(StringIO(dataset_json), orient='split')
                 df.index = pd.to_datetime(df.index)
                 
-                # Initialize advanced predictor
-                predictor = AdvancedPowerAIPredictor()
+                # Initialize MLOps engine
+                engine = MLOpsAdvancedEngine()
                 
-                # Feature engineering
-                df = predictor.engineer_features(df)
+                # Filter to numeric columns only (like the standalone MLOps engine)
+                df = df.select_dtypes(include=[np.number])
                 
-                # Train models
+                # Feature engineering with correlation analysis
+                df_original_features = len(df.columns)
+                df = engine.engineer_features(df)
+                df_final_features = len(df.columns)
+                
+                # Train optimized models
                 results = {}
                 targets = ['ups_total_power', 'met1_total_power', 'ups_load']
                 
                 for target in targets:
                     if target in df.columns:
-                        model_result = predictor.train_advanced_models(df, target)
+                        # Train optimized model
+                        model_result = engine.train_optimized_model(df, target)
+                        
+                        # Add additional metadata for dashboard
+                        model_result.update({
+                            'model_name': 'Optimized XGBoost (MLOps)',
+                            'features_original': df_original_features,
+                            'features_final': df_final_features,
+                            'features_removed': df_original_features - df_final_features
+                        })
+                        
                         results[target] = model_result
                         
-                        # Future predictions
-                        future_pred = predictor.predict_future_advanced(df, target, hours_ahead=24)
+                        # Future predictions with optimized model
+                        future_pred = engine.predict_future_optimized(df, target, hours_ahead=24)
                         if future_pred is not None:
                             results[f'{target}_future'] = future_pred.to_json(date_format='iso', orient='split')
                 
-                # Anomaly detection
-                df = predictor.detect_advanced_anomalies(df)
+                # Advanced anomaly detection
+                df = engine.detect_advanced_anomalies(df)
                 anomalies = {
                     'total': int(df['is_any_anomaly'].sum()),
                     'percentage': float(df['is_any_anomaly'].mean() * 100),
-                    'data': df[df['is_any_anomaly']].index.strftime('%Y-%m-%d %H:%M:%S').tolist()
+                    'statistical': int(df['is_statistical_anomaly'].sum()),
+                    'ml_based': int(df['is_ml_anomaly'].sum()),
+                    'iqr_based': int(df['is_iqr_anomaly'].sum()),
+                    'data': df[df['is_any_anomaly']].index.strftime('%Y-%m-%d %H:%M:%S').tolist(),
+                    'scores': df[df['is_any_anomaly']]['anomaly_score'].tolist()
                 }
                 results['anomalies'] = anomalies
                 
-                # System insights
-                insights = predictor.generate_insights(df, results)
+                # Add correlation analysis results
+                if hasattr(engine, 'correlation_analysis') and engine.correlation_analysis:
+                    results['correlation_analysis'] = engine.correlation_analysis
+                
+                # Enhanced system insights for MLOps
+                insights = self.generate_mlops_insights(df, results, engine)
                 results['insights'] = insights
                 
                 return results
                 
             except Exception as e:
-                print(f"ML Analysis Error: {e}")
+                print(f"MLOps Analysis Error: {e}")
+                import traceback
+                traceback.print_exc()
                 return {'error': str(e)}
         
         @self.app.callback(
@@ -248,7 +275,7 @@ class PowerAIDashboard:
             if not dataset_json:
                 return html.P("No data available")
             
-            df = pd.read_json(dataset_json, orient='split')
+            df = pd.read_json(StringIO(dataset_json), orient='split')
             df.index = pd.to_datetime(df.index)
             
             if active_tab == "monitoring":
@@ -263,6 +290,79 @@ class PowerAIDashboard:
                 return self.create_anomalies_tab(df, ml_results)
             
             return html.P("Tab content not available")
+    
+    def generate_mlops_insights(self, df, results, engine):
+        """Generate MLOps-specific insights for the dashboard"""
+        insights = {
+            'recommendations': [],
+            'feature_analysis': {},
+            'model_performance': {},
+            'correlation_summary': {}
+        }
+        
+        try:
+            # Feature analysis
+            for target in ['ups_total_power', 'met1_total_power', 'ups_load']:
+                if target in results:
+                    model_metrics = results[target]
+                    cv_r2 = model_metrics.get('cv_r2_mean', 0)
+                    mae = model_metrics.get('mae', 0)
+                    features_used = len(model_metrics.get('features_used', []))
+                    
+                    insights['model_performance'][target] = {
+                        'cv_r2': cv_r2,
+                        'mae': mae,
+                        'features_used': features_used,
+                        'stability': 'High' if model_metrics.get('cv_r2_std', 1) < 0.1 else 'Medium'
+                    }
+                    
+                    # Performance recommendations
+                    if cv_r2 > 0.8:
+                        insights['recommendations'].append(f"✅ {target}: Excellent model performance (CV R² = {cv_r2:.3f})")
+                    elif cv_r2 > 0.6:
+                        insights['recommendations'].append(f"⚠️ {target}: Good performance, consider feature tuning (CV R² = {cv_r2:.3f})")
+                    else:
+                        insights['recommendations'].append(f"🔧 {target}: Performance needs improvement (CV R² = {cv_r2:.3f})")
+            
+            # Correlation analysis insights
+            if 'correlation_analysis' in results:
+                corr_analysis = results['correlation_analysis']
+                insights['correlation_summary'] = {
+                    'features_dropped': corr_analysis.get('features_dropped', 0),
+                    'features_remaining': corr_analysis.get('features_remaining', 0),
+                    'correlation_pairs': len(corr_analysis.get('high_corr_pairs', []))
+                }
+                
+                if corr_analysis.get('features_dropped', 0) > 0:
+                    insights['recommendations'].append(
+                        f"🧹 Removed {corr_analysis['features_dropped']} highly correlated features for better model performance"
+                    )
+            
+            # Anomaly insights
+            if 'anomalies' in results:
+                anomaly_pct = results['anomalies'].get('percentage', 0)
+                if anomaly_pct > 10:
+                    insights['recommendations'].append(f"🚨 High anomaly rate ({anomaly_pct:.1f}%) - investigate system issues")
+                elif anomaly_pct > 5:
+                    insights['recommendations'].append(f"⚠️ Moderate anomaly rate ({anomaly_pct:.1f}%) - monitor closely")
+                else:
+                    insights['recommendations'].append(f"✅ Normal anomaly rate ({anomaly_pct:.1f}%) - system operating well")
+            
+            # Feature importance insights
+            for target in ['ups_total_power', 'ups_load']:
+                if target in results and 'feature_importance' in results[target]:
+                    top_features = results[target]['feature_importance'][:3]
+                    if top_features:
+                        top_feature_names = [feat['feature'] for feat in top_features]
+                        insights['recommendations'].append(
+                            f"🎯 {target}: Key drivers are {', '.join(top_feature_names[:2])}"
+                        )
+            
+        except Exception as e:
+            print(f"Error generating MLOps insights: {e}")
+            insights['recommendations'].append("⚠️ Error generating insights - check system logs")
+        
+        return insights
     
     def create_monitoring_tab(self, df):
         fig_load = go.Figure()
@@ -283,9 +383,9 @@ class PowerAIDashboard:
     
     def create_predictions_tab(self, df, ml_results):
         if not ml_results or 'error' in ml_results:
-            return dbc.Alert("⚡ Run ML Analysis to see advanced predictions", color="info")
+            return dbc.Alert("🔬 Run MLOps Analysis to see optimized predictions with correlation analysis", color="info")
         
-        # Model performance cards
+        # MLOps Model performance cards with enhanced metrics
         performance_cards = []
         targets = ['ups_total_power', 'met1_total_power', 'ups_load']
         target_names = {'ups_total_power': 'UPS Power', 'met1_total_power': 'Meter 1 Power', 'ups_load': 'UPS Load'}
@@ -293,22 +393,72 @@ class PowerAIDashboard:
         for target in targets:
             if target in ml_results:
                 result = ml_results[target]
+                cv_r2 = result.get('cv_r2_mean', 0)
+                cv_std = result.get('cv_r2_std', 0)
+                features_used = len(result.get('features_used', []))
+                
+                # Color coding based on CV performance
+                if cv_r2 > 0.8:
+                    card_color = "success"
+                    performance_icon = "🏆"
+                elif cv_r2 > 0.6:
+                    card_color = "warning"
+                    performance_icon = "⚠️"
+                else:
+                    card_color = "danger"
+                    performance_icon = "🔧"
+                
                 performance_cards.append(
                     dbc.Col([
                         dbc.Card([
-                            dbc.CardHeader(f"🎯 {target_names.get(target, target)}"),
+                            dbc.CardHeader(f"{performance_icon} {target_names.get(target, target)}"),
                             dbc.CardBody([
-                                html.H4(f"R² = {result.get('r2', 0):.3f}", className="text-success"),
+                                html.H4(f"CV R² = {cv_r2:.3f} ± {cv_std:.3f}", className=f"text-{card_color}"),
                                 html.P(f"MAE: {result.get('mae', 0):.1f}"),
-                                html.P(f"Model: {result.get('model_name', 'XGBoost')}", className="text-muted")
+                                html.P(f"Features: {features_used}", className="text-muted"),
+                                html.P(f"Model: {result.get('model_name', 'Optimized XGBoost')}", className="text-muted"),
+                                html.Small(f"MAPE: {result.get('mape', 0):.2f}%", className="text-info")
                             ])
-                        ])
+                        ], color=card_color, outline=True)
                     ], width=4)
                 )
         
         content = [
             dbc.Row(performance_cards, className="mb-4")
         ]
+        
+        # MLOps Correlation Analysis Summary
+        if 'correlation_analysis' in ml_results:
+            corr_analysis = ml_results['correlation_analysis']
+            content.append(
+                dbc.Row([
+                    dbc.Col([
+                        dbc.Card([
+                            dbc.CardHeader("🔗 MLOps Feature Correlation Analysis"),
+                            dbc.CardBody([
+                                dbc.Row([
+                                    dbc.Col([
+                                        html.H5(f"{corr_analysis.get('total_features', 0)}", className="text-primary"),
+                                        html.P("Original Features", className="mb-0")
+                                    ], width=3),
+                                    dbc.Col([
+                                        html.H5(f"{corr_analysis.get('features_dropped', 0)}", className="text-danger"),
+                                        html.P("Features Removed", className="mb-0")
+                                    ], width=3),
+                                    dbc.Col([
+                                        html.H5(f"{corr_analysis.get('features_remaining', 0)}", className="text-success"),
+                                        html.P("Features Kept", className="mb-0")
+                                    ], width=3),
+                                    dbc.Col([
+                                        html.H5(f"{len(corr_analysis.get('high_corr_pairs', []))}", className="text-warning"),
+                                        html.P("Correlated Pairs", className="mb-0")
+                                    ], width=3)
+                                ])
+                            ])
+                        ])
+                    ], width=12)
+                ], className="mb-4")
+            )
         
         # System insights
         if 'insights' in ml_results:
@@ -335,7 +485,7 @@ class PowerAIDashboard:
             future_key = f'{target}_future'
             if future_key in ml_results:
                 try:
-                    future_df = pd.read_json(ml_results[future_key], orient='split')
+                    future_df = pd.read_json(StringIO(ml_results[future_key]), orient='split')
                     future_df.index = pd.to_datetime(future_df.index)
                     
                     fig_forecast = go.Figure()
@@ -446,22 +596,45 @@ class PowerAIDashboard:
     
     def create_anomalies_tab(self, df, ml_results):
         if not ml_results or 'error' in ml_results:
-            return dbc.Alert("⚡ Run ML Analysis to detect anomalies with advanced methods", color="info")
+            return dbc.Alert("🔬 Run MLOps Analysis to detect anomalies with multi-method approach", color="info")
         
-        # Get anomaly information from advanced ML results
+        # Get anomaly information from MLOps results
         anomalies_info = ml_results.get('anomalies', {})
         anomaly_count = anomalies_info.get('total', 0)
         anomaly_percentage = anomalies_info.get('percentage', 0)
+        statistical_count = anomalies_info.get('statistical', 0)
+        ml_count = anomalies_info.get('ml_based', 0)
+        iqr_count = anomalies_info.get('iqr_based', 0)
         
         content = [
             dbc.Row([
                 dbc.Col([
                     dbc.Card([
-                        dbc.CardHeader("🚨 Advanced Anomaly Detection Results"),
+                        dbc.CardHeader("🔬 MLOps Multi-Method Anomaly Detection"),
                         dbc.CardBody([
-                            html.H3(f"{anomaly_count} anomalies found", className="text-warning"),
-                            html.P(f"{anomaly_percentage:.2f}% of total data points"),
-                            html.P("Using statistical Z-score and Isolation Forest methods", className="text-muted")
+                            dbc.Row([
+                                dbc.Col([
+                                    html.H3(f"{anomaly_count}", className="text-warning"),
+                                    html.P("Total Anomalies", className="mb-0")
+                                ], width=3),
+                                dbc.Col([
+                                    html.H5(f"{statistical_count}", className="text-info"),
+                                    html.P("Statistical (Z-Score)", className="mb-0")
+                                ], width=3),
+                                dbc.Col([
+                                    html.H5(f"{ml_count}", className="text-success"),
+                                    html.P("ML (Isolation Forest)", className="mb-0")
+                                ], width=3),
+                                dbc.Col([
+                                    html.H5(f"{iqr_count}", className="text-secondary"),
+                                    html.P("IQR-Based", className="mb-0")
+                                ], width=3)
+                            ]),
+                            html.Hr(),
+                            html.P(f"{anomaly_percentage:.2f}% of total data points flagged as anomalous", 
+                                  className="text-center"),
+                            html.Small("Using Z-Score (>3σ), Isolation Forest (5% contamination), and IQR (1.5×IQR) methods", 
+                                     className="text-muted")
                         ])
                     ])
                 ], width=12)
@@ -470,15 +643,15 @@ class PowerAIDashboard:
         
         # Create anomaly visualization if we have the data
         try:
-            # Try to use stored ML predictor results or recreate them
+            # Try to use stored MLOps results or recreate them
             import sys
             sys.path.append('.')
-            from tools.advanced_ml_engine import AdvancedPowerAIPredictor
+            from tools.mlops_advanced_engine import MLOpsAdvancedEngine
             
-            predictor = AdvancedPowerAIPredictor()
+            engine = MLOpsAdvancedEngine()
             df_copy = df.copy()
-            df_features = predictor.engineer_features(df_copy)
-            df_anomalies = predictor.detect_advanced_anomalies(df_features)
+            df_features = engine.engineer_features(df_copy)
+            df_anomalies = engine.detect_advanced_anomalies(df_features)
             
             # Create visualization
             normal_data = df_anomalies[~df_anomalies['is_any_anomaly']]

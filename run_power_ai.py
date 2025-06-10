@@ -15,13 +15,13 @@ def main():
     print("Choose your adventure:")
     print("1. 🤖 Run Basic ML Engine (simple models)")
     print("2. 🎯 Run ADVANCED ML Engine (sophisticated analysis)")
-    print("3. 🎨 Generate Interactive Visualizations")
-    print("4. 🔬 Generate ADVANCED Visualizations")
-    print("5. 📊 Create ML Visualizations")
-    print("6. 🌐 Launch Dash Dashboard (interactive web app)")
-    print("7. 🛠️ Run Utilities & Configuration")
-    print("8. 🚀 RUN COMPLETE ADVANCED SYSTEM")
-    print("9. 🔄 RUN EVERYTHING (all components)")
+    print("3. 🔬 Run MLOps ADVANCED Analysis (correlation + optimization)")
+    print("4. 🎨 Generate Interactive Visualizations")
+    print("5. 🔬 Generate ADVANCED Visualizations")
+    print("6. 📊 Create ML Visualizations")
+    print("7. 🌐 Launch Dash Dashboard (interactive web app)")
+    print("8. 🛠️ Run Utilities & Configuration")
+    print("9. 🚀 RUN COMPLETE ADVANCED SYSTEM")
     print("0. ❌ Exit")
     
     choice = input("\nEnter your choice (0-9): ").strip()
@@ -37,68 +37,59 @@ def main():
         subprocess.run([sys.executable, "tools/advanced_ml_engine.py"])
         
     elif choice == "3":
+        print("\n🔬 Running MLOps ADVANCED Analysis...")
+        print("Comprehensive ML pipeline with:")
+        print("• Feature correlation analysis and removal")
+        print("• Multi-method feature selection")
+        print("• Hyperparameter optimization")
+        print("• Cross-validation with time series")
+        print("• Advanced XGBoost optimization")
+        print("• Comprehensive reporting")
+        subprocess.run([sys.executable, "tools/mlops_advanced_engine.py"])
+        
+    elif choice == "4":
         print("\n🎨 Generating Interactive Visualizations...")
         subprocess.run([sys.executable, "tools/interactive_viz.py"])
         
-    elif choice == "4":
+    elif choice == "5":
         print("\n🔬 Generating ADVANCED Visualizations...")
         print("Power quality dashboards, electrical analysis, PDU monitoring")
         subprocess.run([sys.executable, "tools/advanced_visualizations.py"])
         
-    elif choice == "5":
+    elif choice == "6":
         print("\n📊 Creating ML Visualizations...")
         subprocess.run([sys.executable, "tools/ml_visualizations.py"])
         
-    elif choice == "6":
+    elif choice == "7":
         print("\n🌐 Launching Dash Dashboard...")
         print("Dashboard will be available at: http://localhost:8050")
         print("Press Ctrl+C to stop the dashboard")
         subprocess.run([sys.executable, "tools/dash_frontend.py"])
         
-    elif choice == "7":
+    elif choice == "8":
         print("\n🛠️ Running Utilities...")
         subprocess.run([sys.executable, "tools/additional_utilities.py"])
         
-    elif choice == "8":
-        print("\n🚀 RUNNING COMPLETE ADVANCED SYSTEM...")
-        print("This will run the advanced ML engine plus visualizations")
-        
-        print("\n1/4 🎯 Running Advanced ML Engine...")
-        subprocess.run([sys.executable, "tools/advanced_ml_engine.py"])
-        
-        print("\n2/4 🔬 Generating Advanced Visualizations...")
-        subprocess.run([sys.executable, "tools/advanced_visualizations.py"])
-        
-        print("\n3/4 🎨 Generating Interactive Visualizations...")
-        subprocess.run([sys.executable, "tools/interactive_viz.py"])
-        
-        print("\n4/4 📊 Creating ML Visualizations...")
-        subprocess.run([sys.executable, "tools/ml_visualizations.py"])
-        
-        print("\n✅ Advanced system complete! Check outputs folder for results.")
-        
     elif choice == "9":
-        print("\n🔄 RUNNING EVERYTHING...")
-        print("This will run ALL components in sequence")
+        print("\n🚀 RUNNING COMPLETE ADVANCED SYSTEM...")
+        print("This will run the MLOps engine plus all visualizations")
         
-        print("\n1/6 🎯 Running Advanced ML Engine...")
+        print("\n1/5 🔬 Running MLOps Advanced Analysis...")
+        subprocess.run([sys.executable, "tools/mlops_advanced_engine.py"])
+        
+        print("\n2/5 🎯 Running Advanced ML Engine...")
         subprocess.run([sys.executable, "tools/advanced_ml_engine.py"])
         
-        print("\n2/6 🤖 Running Basic ML Engine (for comparison)...")
-        subprocess.run([sys.executable, "tools/ml_engine.py"])
-        
-        print("\n3/6 🔬 Generating Advanced Visualizations...")
+        print("\n3/5 🔬 Generating Advanced Visualizations...")
         subprocess.run([sys.executable, "tools/advanced_visualizations.py"])
         
-        print("\n4/6 🎨 Generating Interactive Visualizations...")
+        print("\n4/5 🎨 Generating Interactive Visualizations...")
         subprocess.run([sys.executable, "tools/interactive_viz.py"])
         
-        print("\n5/6 📊 Creating ML Visualizations...")
+        print("\n5/5 📊 Creating ML Visualizations...")
         subprocess.run([sys.executable, "tools/ml_visualizations.py"])
         
-        print("\n6/6 🌐 Starting Dashboard...")
-        print("Dashboard available at: http://localhost:8050")
-        subprocess.run([sys.executable, "tools/dash_frontend.py"])
+        print("\n✅ Complete advanced system finished! Check outputs folder for results.")
         
     elif choice == "0":
         print("👋 Goodbye!")
@@ -128,15 +119,17 @@ def show_system_info():
     print("\n📈 Advanced Features:")
     print("   • Electrical engineering feature extraction")
     print("   • Time series analysis with lag features")
-    print("   • XGBoost and Random Forest models")
+    print("   • XGBoost optimization with hyperparameter tuning")
     print("   • Cross-validation with time series splits")
-    print("   • Feature selection and scaling")
-    print("   • Multi-method anomaly detection")
+    print("   • Multi-method feature selection")
+    print("   • Correlation analysis and removal")
+    print("   • MLOps pipeline with comprehensive reporting")
     print("\n🎯 Outputs:")
     print("   • Interactive dashboards")
-    print("   • Predictive models")
+    print("   • Optimized predictive models")
     print("   • Anomaly reports")
-    print("   • Optimization recommendations")
+    print("   • Feature importance analysis")
+    print("   • Correlation matrices")
     print("   • Real-time visualizations")
     print("=" * 60)
 
