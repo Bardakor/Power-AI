@@ -645,13 +645,32 @@ class PowerAIDashboard:
         try:
             # Try to use stored MLOps results or recreate them
             import sys
+            import pandas as pd
             sys.path.append('.')
             from tools.mlops_advanced_engine import MLOpsAdvancedEngine
             
             engine = MLOpsAdvancedEngine()
             df_copy = df.copy()
+            
+            # Ensure datetime index is properly set
+            if not isinstance(df_copy.index, pd.DatetimeIndex):
+                if 'data_hora' in df_copy.columns:
+                    df_copy['datetime'] = pd.to_datetime(df_copy['data_hora'])
+                    df_copy = df_copy.set_index('datetime').sort_index()
+                elif 'datetime' in df_copy.columns:
+                    df_copy = df_copy.set_index('datetime').sort_index()
+                else:
+                    # Create a simple range index if no datetime available
+                    df_copy.index = pd.date_range(start='2024-01-01', periods=len(df_copy), freq='H')
+            
             df_features = engine.engineer_features(df_copy)
             df_anomalies = engine.detect_advanced_anomalies(df_features)
+            
+            # Ensure anomaly columns exist
+            if 'is_any_anomaly' not in df_anomalies.columns:
+                df_anomalies['is_any_anomaly'] = False
+            if 'anomaly_score' not in df_anomalies.columns:
+                df_anomalies['anomaly_score'] = 0.0
             
             # Create visualization
             normal_data = df_anomalies[~df_anomalies['is_any_anomaly']]
@@ -660,10 +679,19 @@ class PowerAIDashboard:
             # Power anomalies plot
             fig_power = go.Figure()
             
-            if 'ups_total_power' in df_anomalies.columns:
+            # Check for power column and ensure it's numeric
+            power_col = None
+            for col in ['ups_total_power', 'total_power', 'ups_pa', 'ups_pb', 'ups_pc']:
+                if col in df_anomalies.columns:
+                    # Ensure column is numeric
+                    df_anomalies[col] = pd.to_numeric(df_anomalies[col], errors='coerce')
+                    power_col = col
+                    break
+            
+            if power_col and not normal_data.empty:
                 fig_power.add_trace(go.Scatter(
-                    x=normal_data.index, 
-                    y=normal_data['ups_total_power'],
+                    x=normal_data.index.strftime('%Y-%m-%d %H:%M'), 
+                    y=normal_data[power_col].fillna(0),
                     mode='markers', 
                     name='Normal', 
                     opacity=0.6,
@@ -672,8 +700,8 @@ class PowerAIDashboard:
                 
                 if not anomaly_data.empty:
                     fig_power.add_trace(go.Scatter(
-                        x=anomaly_data.index, 
-                        y=anomaly_data['ups_total_power'],
+                        x=anomaly_data.index.strftime('%Y-%m-%d %H:%M'), 
+                        y=anomaly_data[power_col].fillna(0),
                         mode='markers', 
                         name='Anomaly', 
                         marker=dict(color='red', size=8, symbol='x')
@@ -689,36 +717,48 @@ class PowerAIDashboard:
             
             # Load anomalies plot
             fig_load = go.Figure()
-            fig_load.add_trace(go.Scatter(
-                x=normal_data.index, 
-                y=normal_data['ups_load'],
-                mode='markers', 
-                name='Normal', 
-                opacity=0.6,
-                marker=dict(color='green', size=4)
-            ))
             
-            if not anomaly_data.empty:
+            # Check for load column and ensure it's numeric
+            load_col = None
+            for col in ['ups_load', 'load', 'ups_load_avg']:
+                if col in df_anomalies.columns:
+                    df_anomalies[col] = pd.to_numeric(df_anomalies[col], errors='coerce')
+                    load_col = col
+                    break
+            
+            if load_col and not normal_data.empty:
                 fig_load.add_trace(go.Scatter(
-                    x=anomaly_data.index, 
-                    y=anomaly_data['ups_load'],
+                    x=normal_data.index.strftime('%Y-%m-%d %H:%M'), 
+                    y=normal_data[load_col].fillna(0),
                     mode='markers', 
-                    name='Anomaly', 
-                    marker=dict(color='red', size=8, symbol='x')
+                    name='Normal', 
+                    opacity=0.6,
+                    marker=dict(color='green', size=4)
                 ))
-            
-            fig_load.update_layout(
-                title="UPS Load Anomalies",
-                xaxis_title="Time", 
-                yaxis_title="UPS Load (%)",
-                template="plotly_white",
-                height=400
-            )
+                
+                if not anomaly_data.empty:
+                    fig_load.add_trace(go.Scatter(
+                        x=anomaly_data.index.strftime('%Y-%m-%d %H:%M'), 
+                        y=anomaly_data[load_col].fillna(0),
+                        mode='markers', 
+                        name='Anomaly', 
+                        marker=dict(color='red', size=8, symbol='x')
+                    ))
+                
+                fig_load.update_layout(
+                    title="UPS Load Anomalies",
+                    xaxis_title="Time", 
+                    yaxis_title="UPS Load (%)",
+                    template="plotly_white",
+                    height=400
+                )
             
             # Anomaly score distribution
             fig_scores = go.Figure()
+            # Ensure anomaly_score is numeric and handle NaN values
+            anomaly_scores = pd.to_numeric(df_anomalies['anomaly_score'], errors='coerce').fillna(0)
             fig_scores.add_trace(go.Histogram(
-                x=df_anomalies['anomaly_score'],
+                x=anomaly_scores,
                 nbinsx=50,
                 name='Anomaly Scores',
                 marker_color='orange'
@@ -731,40 +771,48 @@ class PowerAIDashboard:
                 height=400
             )
             
-            content.extend([
-                dbc.Row([
-                    dbc.Col([dcc.Graph(figure=fig_power)], width=6),
-                    dbc.Col([dcc.Graph(figure=fig_load)], width=6)
-                ], className="mb-4"),
-                dbc.Row([
-                    dbc.Col([dcc.Graph(figure=fig_scores)], width=12)
-                ], className="mb-4")
-            ])
+            # Only add graphs if we have valid data
+            graphs_to_add = []
+            if power_col:
+                graphs_to_add.append(dbc.Col([dcc.Graph(figure=fig_power)], width=6))
+            if load_col:
+                graphs_to_add.append(dbc.Col([dcc.Graph(figure=fig_load)], width=6))
             
-            # Anomaly timeline
-            if not anomaly_data.empty:
-                daily_anomalies = anomaly_data.resample('D').size()
-                
-                fig_timeline = go.Figure()
-                fig_timeline.add_trace(go.Bar(
-                    x=daily_anomalies.index,
-                    y=daily_anomalies.values,
-                    name='Daily Anomalies',
-                    marker_color='red'
-                ))
-                fig_timeline.update_layout(
-                    title="Anomaly Timeline (Daily Count)",
-                    xaxis_title="Date", 
-                    yaxis_title="Number of Anomalies",
-                    template="plotly_white",
-                    height=400
-                )
-                
-                content.append(
+            if graphs_to_add:
+                content.extend([
+                    dbc.Row(graphs_to_add, className="mb-4"),
                     dbc.Row([
-                        dbc.Col([dcc.Graph(figure=fig_timeline)], width=12)
+                        dbc.Col([dcc.Graph(figure=fig_scores)], width=12)
                     ], className="mb-4")
-                )
+                ])
+            
+            # Anomaly timeline - ensure datetime index for resampling
+            if not anomaly_data.empty and isinstance(anomaly_data.index, pd.DatetimeIndex):
+                try:
+                    daily_anomalies = anomaly_data.resample('D').size()
+                    
+                    fig_timeline = go.Figure()
+                    fig_timeline.add_trace(go.Bar(
+                        x=daily_anomalies.index.strftime('%Y-%m-%d'),
+                        y=daily_anomalies.values,
+                        name='Daily Anomalies',
+                        marker_color='red'
+                    ))
+                    fig_timeline.update_layout(
+                        title="Anomaly Timeline (Daily Count)",
+                        xaxis_title="Date", 
+                        yaxis_title="Number of Anomalies",
+                        template="plotly_white",
+                        height=400
+                    )
+                    
+                    content.append(
+                        dbc.Row([
+                            dbc.Col([dcc.Graph(figure=fig_timeline)], width=12)
+                        ], className="mb-4")
+                    )
+                except Exception as timeline_error:
+                    print(f"Error creating anomaly timeline: {timeline_error}")
             
         except Exception as e:
             print(f"Error creating anomaly visualizations: {e}")

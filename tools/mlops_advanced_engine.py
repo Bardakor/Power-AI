@@ -55,19 +55,49 @@ class MLOpsAdvancedEngine:
                 if csv_file.exists():
                     print(f"📊 Loading {dataset_dir.name}...")
                     df = pd.read_csv(csv_file, nrows=sample_size, low_memory=False)
-                    df['datetime'] = pd.to_datetime(df['data_hora'])
-                    df = df.set_index('datetime').sort_index()
-                    df = df.select_dtypes(include=[np.number])
+                    
+                    # Handle datetime conversion properly
+                    if 'data_hora' in df.columns:
+                        df['datetime'] = pd.to_datetime(df['data_hora'], errors='coerce')
+                        df = df.set_index('datetime').sort_index()
+                        # Drop the original datetime column to avoid correlation issues
+                        df = df.drop(columns=['data_hora'], errors='ignore')
+                    
+                    # Remove any remaining non-numeric columns that might cause issues
+                    # Keep only numeric columns, but be more careful about it
+                    numeric_columns = []
+                    for col in df.columns:
+                        try:
+                            # Try to convert to numeric
+                            pd.to_numeric(df[col], errors='raise')
+                            numeric_columns.append(col)
+                        except (ValueError, TypeError):
+                            # Skip non-numeric columns
+                            print(f"   Skipping non-numeric column: {col}")
+                            continue
+                    
+                    df = df[numeric_columns]
                     datasets[dataset_dir.name] = df
-                    print(f"✅ Loaded {len(df)} rows, {len(df.columns)} columns")
+                    print(f"✅ Loaded {len(df)} rows, {len(df.columns)} numeric columns")
         return datasets
     
     def analyze_correlations(self, df, threshold=0.95):
         """Comprehensive correlation analysis"""
         print(f"🔍 Analyzing feature correlations (threshold: {threshold})...")
         
-        # Calculate correlation matrix
-        corr_matrix = df.corr().abs()
+        # Ensure we only use numeric columns for correlation analysis
+        numeric_df = df.select_dtypes(include=[np.number])
+        
+        # Also remove any columns that might still contain strings/objects
+        for col in numeric_df.columns:
+            try:
+                # Try to convert to numeric, drop if it fails
+                pd.to_numeric(numeric_df[col], errors='raise')
+            except (ValueError, TypeError):
+                numeric_df = numeric_df.drop(columns=[col])
+        
+        # Calculate correlation matrix on clean numeric data
+        corr_matrix = numeric_df.corr().abs()
         
         # Find highly correlated pairs
         upper_triangle = corr_matrix.where(
@@ -82,8 +112,8 @@ class MLOpsAdvancedEngine:
             correlated_features = upper_triangle[column][upper_triangle[column] > threshold].index.tolist()
             for corr_feature in correlated_features:
                 high_corr_pairs.append((column, corr_feature, upper_triangle.loc[corr_feature, column]))
-                # Keep the feature with higher variance
-                if df[column].var() < df[corr_feature].var():
+                # Keep the feature with higher variance (use numeric_df for variance calculation)
+                if numeric_df[column].var() < numeric_df[corr_feature].var():
                     features_to_drop.add(column)
                 else:
                     features_to_drop.add(corr_feature)
@@ -93,9 +123,9 @@ class MLOpsAdvancedEngine:
             'high_corr_pairs': high_corr_pairs,
             'features_to_drop': list(features_to_drop),
             'correlation_matrix_shape': corr_matrix.shape,
-            'total_features': len(df.columns),
+            'total_features': len(numeric_df.columns),
             'features_dropped': len(features_to_drop),
-            'features_remaining': len(df.columns) - len(features_to_drop)
+            'features_remaining': len(numeric_df.columns) - len(features_to_drop)
         }
         
         print(f"📈 Found {len(high_corr_pairs)} highly correlated pairs")
@@ -103,15 +133,20 @@ class MLOpsAdvancedEngine:
         print(f"✅ Keeping {correlation_report['features_remaining']} features")
         
         # Create correlation heatmap for top features
-        if len(df.columns) <= 50:  # Only for manageable number of features
-            plt.figure(figsize=(15, 12))
-            mask = np.triu(np.ones_like(corr_matrix, dtype=bool))
-            sns.heatmap(corr_matrix, mask=mask, cmap='coolwarm', center=0,
-                       square=True, linewidths=0.5, cbar_kws={"shrink": .8})
-            plt.title('Feature Correlation Matrix')
-            plt.tight_layout()
-            plt.savefig(self.analysis_dir / 'correlation_matrix.png', dpi=300, bbox_inches='tight')
-            plt.close()
+        if len(numeric_df.columns) <= 50:  # Only for manageable number of features
+            try:
+                import matplotlib.pyplot as plt
+                import seaborn as sns
+                plt.figure(figsize=(15, 12))
+                mask = np.triu(np.ones_like(corr_matrix, dtype=bool))
+                sns.heatmap(corr_matrix, mask=mask, cmap='coolwarm', center=0,
+                           square=True, linewidths=0.5, cbar_kws={"shrink": .8})
+                plt.title('Feature Correlation Matrix')
+                plt.tight_layout()
+                plt.savefig(self.analysis_dir / 'correlation_matrix.png', dpi=300, bbox_inches='tight')
+                plt.close()
+            except Exception as viz_error:
+                print(f"Warning: Could not create correlation heatmap: {viz_error}")
         
         return features_to_drop, correlation_report
     
@@ -149,10 +184,14 @@ class MLOpsAdvancedEngine:
             df['ups_power_factor'] = df['ups_power_factor'].clip(0, 2)  # Reasonable bounds
         
         # Time-based features (cyclical encoding to avoid correlation)
-        df['hour_sin'] = np.sin(2 * np.pi * df.index.hour / 24)
-        df['hour_cos'] = np.cos(2 * np.pi * df.index.hour / 24)
-        df['day_sin'] = np.sin(2 * np.pi * df.index.dayofweek / 7)
-        df['day_cos'] = np.cos(2 * np.pi * df.index.dayofweek / 7)
+        # Only add if we have a proper datetime index
+        if isinstance(df.index, pd.DatetimeIndex):
+            df['hour_sin'] = np.sin(2 * np.pi * df.index.hour / 24)
+            df['hour_cos'] = np.cos(2 * np.pi * df.index.hour / 24)
+            df['day_sin'] = np.sin(2 * np.pi * df.index.dayofweek / 7)
+            df['day_cos'] = np.cos(2 * np.pi * df.index.dayofweek / 7)
+        else:
+            print("Warning: No datetime index available for time-based features")
         
         # Rolling features (limited to reduce correlation)
         for target_col in ['ups_load', 'ups_total_power']:
