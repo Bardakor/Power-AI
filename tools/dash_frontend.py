@@ -11,6 +11,7 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import json
 from io import StringIO
+import base64
 
 class PowerAIDashboard:
     def __init__(self, data_dir="outputs/csv_data"):
@@ -22,14 +23,19 @@ class PowerAIDashboard:
         
     def load_data(self, sample_size=30000):
         datasets = {}
-        for dataset_dir in self.data_dir.glob("*"):
-            if dataset_dir.is_dir():
-                csv_file = dataset_dir / "leituras.csv"
-                if csv_file.exists():
-                    df = pd.read_csv(csv_file, nrows=sample_size)
-                    df['datetime'] = pd.to_datetime(df['data_hora'])
-                    df = df.set_index('datetime').sort_index()
-                    datasets[dataset_dir.name] = df
+        if self.data_dir.exists():
+            for dataset_dir in self.data_dir.glob("*"):
+                if dataset_dir.is_dir():
+                    csv_file = dataset_dir / "leituras.csv"
+                    if csv_file.exists():
+                        try:
+                            df = pd.read_csv(csv_file, nrows=sample_size)
+                            if 'data_hora' in df.columns:
+                                df['datetime'] = pd.to_datetime(df['data_hora'])
+                                df = df.set_index('datetime').sort_index()
+                            datasets[dataset_dir.name] = df
+                        except Exception as e:
+                            print(f"Error loading {csv_file}: {e}")
         return datasets
     
     def setup_layout(self):
@@ -42,6 +48,40 @@ class PowerAIDashboard:
                           className="text-center text-muted mb-4")
                 ])
             ]),
+            
+            # File Upload Section
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader(html.H4("📁 Upload Your Power Data", className="mb-0")),
+                        dbc.CardBody([
+                            dcc.Upload(
+                                id='upload-data',
+                                children=html.Div([
+                                    '🎯 Drag and Drop or ',
+                                    html.A('Select CSV Files', style={'color': '#007bff', 'textDecoration': 'underline'})
+                                ]),
+                                style={
+                                    'width': '100%',
+                                    'height': '100px',
+                                    'lineHeight': '100px',
+                                    'borderWidth': '2px',
+                                    'borderStyle': 'dashed',
+                                    'borderRadius': '10px',
+                                    'borderColor': '#007bff',
+                                    'textAlign': 'center',
+                                    'backgroundColor': '#f8f9fa',
+                                    'cursor': 'pointer',
+                                    'transition': 'all 0.3s ease'
+                                },
+                                multiple=True
+                            ),
+                            html.Div(id='upload-status', className="mt-3"),
+                            html.Div(id='uploaded-files', className="mt-2")
+                        ])
+                    ])
+                ], width=12)
+            ], className="mb-4"),
             
             dbc.Row([
                 dbc.Col([
@@ -108,23 +148,106 @@ class PowerAIDashboard:
             
             dcc.Interval(id='interval-component', interval=30*1000, n_intervals=0),
             dcc.Store(id='ml-results-store'),
-            dcc.Store(id='dataset-store')
+            dcc.Store(id='dataset-store'),
+            dcc.Store(id='uploaded-datasets-store', data={})
             
         ], fluid=True)
     
     def setup_callbacks(self):
         @self.app.callback(
-            Output('dataset-store', 'data'),
-            Input('dataset-dropdown', 'value'),
-            Input('time-range', 'value')
+            [Output('uploaded-datasets-store', 'data'),
+             Output('upload-status', 'children'),
+             Output('uploaded-files', 'children'),
+             Output('dataset-dropdown', 'options')],
+            Input('upload-data', 'contents'),
+            State('upload-data', 'filename'),
+            State('uploaded-datasets-store', 'data'),
+            prevent_initial_call=True
         )
-        def update_dataset_store(dataset_name, time_range):
-            if not dataset_name or dataset_name not in self.datasets:
+        def handle_file_upload(contents, filenames, current_datasets):
+            if not contents:
+                return current_datasets, "", "", [{'label': name.split('_')[1][:15], 'value': name} for name in self.datasets.keys()]
+            
+            new_datasets = current_datasets.copy()
+            uploaded_files_info = []
+            status_messages = []
+            
+            for content, filename in zip(contents, filenames):
+                try:
+                    # Decode the uploaded file
+                    content_type, content_string = content.split(',')
+                    decoded = base64.b64decode(content_string)
+                    
+                    # Parse CSV
+                    df = pd.read_csv(StringIO(decoded.decode('utf-8')))
+                    
+                    # Process datetime if present
+                    if 'data_hora' in df.columns:
+                        df['datetime'] = pd.to_datetime(df['data_hora'])
+                        df = df.set_index('datetime').sort_index()
+                    elif 'datetime' in df.columns:
+                        df = df.set_index('datetime').sort_index()
+                    else:
+                        # Create a simple range index if no datetime available
+                        df.index = pd.date_range(start='2024-01-01', periods=len(df), freq='H')
+                    
+                    # Store the dataset
+                    dataset_name = filename.replace('.csv', '')
+                    new_datasets[dataset_name] = df.to_json(date_format='iso', orient='split')
+                    
+                    # Add to main datasets for immediate use
+                    self.datasets[dataset_name] = df
+                    
+                    uploaded_files_info.append(
+                        dbc.Alert([
+                            html.I(className="fas fa-check-circle me-2"),
+                            f"✅ {filename} - {len(df)} rows, {len(df.columns)} columns"
+                        ], color="success", className="mb-2")
+                    )
+                    
+                    status_messages.append(f"Successfully uploaded {filename}")
+                    
+                except Exception as e:
+                    uploaded_files_info.append(
+                        dbc.Alert([
+                            html.I(className="fas fa-exclamation-triangle me-2"),
+                            f"❌ Error processing {filename}: {str(e)}"
+                        ], color="danger", className="mb-2")
+                    )
+                    status_messages.append(f"Error with {filename}")
+            
+            # Update dropdown options to include uploaded files
+            all_options = [{'label': name.split('_')[1][:15] if '_' in name else name[:15], 'value': name} 
+                          for name in list(self.datasets.keys())]
+            
+            status = dbc.Alert(
+                f"📤 Processed {len(contents)} file(s): {', '.join(status_messages)}", 
+                color="info"
+            ) if status_messages else ""
+            
+            return new_datasets, status, uploaded_files_info, all_options
+
+        @self.app.callback(
+            Output('dataset-store', 'data'),
+            [Input('dataset-dropdown', 'value'),
+             Input('time-range', 'value'),
+             Input('uploaded-datasets-store', 'data')]
+        )
+        def update_dataset_store(dataset_name, time_range, uploaded_datasets):
+            if not dataset_name:
                 return {}
             
-            df = self.datasets[dataset_name].copy()
+            # Try to get from uploaded datasets first, then local datasets
+            df = None
+            if dataset_name in uploaded_datasets:
+                df = pd.read_json(StringIO(uploaded_datasets[dataset_name]), orient='split')
+                df.index = pd.to_datetime(df.index)
+            elif dataset_name in self.datasets:
+                df = self.datasets[dataset_name].copy()
+            else:
+                return {}
             
-            if time_range != 'ALL':
+            if time_range != 'ALL' and not df.empty:
                 hours = {'24H': 24, '7D': 168, '30D': 720}[time_range]
                 cutoff = df.index[-1] - timedelta(hours=hours)
                 df = df[df.index >= cutoff]
@@ -822,14 +945,16 @@ class PowerAIDashboard:
         
         return html.Div(content)
     
-    def run_server(self, debug=True, port=8050):
-        self.app.run(debug=debug, port=port)
+    def run_server(self, debug=True, port=8050, host='0.0.0.0'):
+        self.app.run(debug=debug, port=port, host=host)
 
 def main():
+    import os
     dashboard = PowerAIDashboard()
+    port = int(os.environ.get('PORT', 8050))
     print("🚀 Starting Power AI Dashboard...")
-    print("📱 Access dashboard at: http://localhost:8050")
-    dashboard.run_server(debug=False)
+    print(f"📱 Access dashboard at: http://localhost:{port}")
+    dashboard.run_server(debug=False, port=port, host='0.0.0.0')
 
 if __name__ == "__main__":
     main()

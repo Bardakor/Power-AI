@@ -1,0 +1,83 @@
+# Git files
+.git
+.gitignore
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large data files (only needed for local development)
+data/
+notebooks/
+image/
+outputs/csv_data/*.csv
+
+# Build and deployment files
+cloudbuild.yaml
+deploy.sh
+Dockerfile
+app.yaml
+*.md
+
+# Logs
+*.log
+
+# Large output directories (will be created in container)
+outputs/ml_models/
+outputs/mlops_models/
+outputs/mlops_analysis/
+
+# Test files
+test_*.py
+*_test.py
+
+# Documentation
+README*.md
+*.md
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Large images (keep only data)
+outputs/exploration/
+outputs/interactive_viz/
+outputs/ml_viz/
+outputs/power_analysis/
+outputs/advanced_viz/
+
+# Keep only CSV data
+!outputs/csv_data/ 
