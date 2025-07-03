@@ -394,34 +394,64 @@ class PowerAIDashboard:
              Output('upload-status', 'children', allow_duplicate=True)],
             Input('report-button', 'n_clicks'),
             State('dataset-store', 'data'),
+            State('dataset-dropdown', 'value'),
             prevent_initial_call=True
         )
-        def generate_pdf_report(n_clicks, dataset_json):
+        def generate_pdf_report(n_clicks, dataset_json, selected_dataset):
             """Generate comprehensive PDF report and trigger download"""
             if not dataset_json:
                 return None, dbc.Alert("⚠️ No data selected for report generation", color="warning")
             
             try:
-                print("📄 Starting PDF report generation...")
+                print(f"📄 Starting PDF report generation for dataset: {selected_dataset}")
                 
                 # Import the PDF generator
                 import sys
+                import tempfile
                 sys.path.append('.')
                 from tools.pdf_report_generator import PowerAIPDFReportGenerator
                 
-                # Initialize generator and create report
-                generator = PowerAIPDFReportGenerator()
+                # Parse the selected dataset
+                df = pd.read_json(StringIO(dataset_json), orient='split')
+                df.index = pd.to_datetime(df.index)
+                
+                # Create a temporary CSV file for the PDF generator
+                with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as temp_file:
+                    # Reset index to include datetime as a column
+                    df_export = df.reset_index()
+                    if 'datetime' in df_export.columns:
+                        df_export.rename(columns={'datetime': 'data_hora'}, inplace=True)
+                    df_export.to_csv(temp_file.name, index=False)
+                    temp_csv_path = temp_file.name
+                
+                # Create a temporary directory structure for the PDF generator
+                temp_data_dir = tempfile.mkdtemp()
+                dataset_folder = Path(temp_data_dir) / selected_dataset
+                dataset_folder.mkdir(parents=True, exist_ok=True)
+                
+                # Copy the CSV to the expected location
+                import shutil
+                final_csv_path = dataset_folder / "leituras.csv"
+                shutil.copy(temp_csv_path, final_csv_path)
+                
+                # Initialize generator with the temporary data directory
+                generator = PowerAIPDFReportGenerator(data_dir=str(temp_data_dir))
                 generator.load_and_analyze_data(sample_size=30000)
                 report_path = generator.generate_pdf_report()
                 
-                # Read the PDF file for download
+                # Clean up temporary files
                 import os
+                os.unlink(temp_csv_path)
+                shutil.rmtree(temp_data_dir)
+                
+                # Read the PDF file for download
                 from datetime import datetime
                 
                 if os.path.exists(report_path):
                     # Generate a user-friendly filename
                     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                    download_filename = f"PowerAI_Report_{timestamp}.pdf"
+                    dataset_clean = selected_dataset.replace('_', '-')[:20]  # Clean and limit length
+                    download_filename = f"PowerAI_Report_{dataset_clean}_{timestamp}.pdf"
                     
                     # Trigger download
                     download_data = dcc.send_file(str(report_path), filename=download_filename)
@@ -429,6 +459,8 @@ class PowerAIDashboard:
                     status_message = dbc.Alert([
                         html.I(className="fas fa-download me-2"),
                         f"✅ PDF Report Generated & Downloaded! ",
+                        html.Br(),
+                        html.Small(f"Dataset: {selected_dataset}", className="text-info"),
                         html.Br(),
                         html.Small(f"File: {download_filename}", className="text-muted")
                     ], color="success")
