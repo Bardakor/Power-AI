@@ -25,6 +25,8 @@ import joblib
 from scipy import stats
 from scipy.stats import zscore
 import seaborn as sns
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend for thread safety
 import matplotlib.pyplot as plt
 
 # Time series and signal processing

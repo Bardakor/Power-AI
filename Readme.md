@@ -18,8 +18,9 @@ Power AI is a state-of-the-art analytics platform designed for power system moni
 - 📊 **Interactive Dashboard** - Real-time monitoring with Dash/Plotly visualizations
 - ⚡ **Power Quality Analysis** - Voltage stability, frequency analysis, and harmonic detection
 - 🔮 **Predictive Analytics** - XGBoost-powered forecasting with anomaly detection
+- 📄 **Comprehensive PDF Reports** - Professional PDF reports with detailed analysis, charts, and recommendations
 - 🏗️ **Cloud-Native Architecture** - Docker containerized with GCP deployment ready
-- 📈 **Comprehensive Reporting** - Automated analysis reports and executive summaries
+- 📈 **Automated Analysis** - Complete analysis pipeline with one-click report generation
 
 ## 🏗️ Architecture
 
@@ -167,6 +168,21 @@ python run_power_ai.py
   - Alert systems
   - Performance monitoring
 
+#### 6. PDF Reporting System
+
+- **`tools/pdf_report_generator.py`** - Comprehensive PDF report generator:
+  - Executive summary with key findings
+  - System overview and performance metrics
+  - Detailed power analysis with time series plots
+  - Data quality assessment and recommendations
+  - Professional formatting with charts and visualizations
+
+- **`tools/comprehensive_analysis.py`** - Complete analysis pipeline:
+  - Orchestrates all analysis engines
+  - Generates comprehensive PDF reports
+  - Progress tracking and error handling
+  - Performance timing and success metrics
+
 ### Application Entry Points
 
 - **`main_app.py`** - Production dashboard server (Docker/GCP ready)
@@ -236,16 +252,24 @@ outputs/
 ├── advanced_viz/       # Advanced visualizations
 ├── interactive_viz/    # Interactive plots
 ├── ml_viz/            # ML performance visualizations
+├── reports/           # Generated PDF reports
 └── logs/              # System logs
 ```
 
 ### Report Types
 
-1. **Executive Summaries** - High-level system performance overview
-2. **Technical Reports** - Detailed power quality analysis
-3. **ML Performance** - Model accuracy and feature importance
-4. **Anomaly Reports** - Detected system irregularities
-5. **Optimization Recommendations** - System improvement suggestions
+1. **PDF Comprehensive Reports** - Professional multi-page reports with:
+   - Executive summary with key findings and alerts
+   - System overview with performance dashboards
+   - Detailed power analysis with time series plots
+   - Data quality assessment and metrics
+   - Actionable recommendations and priorities
+
+2. **Executive Summaries** - High-level system performance overview
+3. **Technical Reports** - Detailed power quality analysis
+4. **ML Performance** - Model accuracy and feature importance
+5. **Anomaly Reports** - Detected system irregularities
+6. **Optimization Recommendations** - System improvement suggestions
 
 ## 🛠️ Development
 
@@ -294,7 +318,19 @@ python run_power_ai.py
 # Select option 3: "Run MLOps ADVANCED Analysis"
 ```
 
-### 4. Custom Analysis
+### 4. Generate PDF Reports
+```bash
+# Via Dashboard - Click "📊 Generate Report" button
+python main_app.py
+
+# Via Command Line
+python tools/pdf_report_generator.py
+
+# Comprehensive Analysis with PDF Report
+python tools/comprehensive_analysis.py
+```
+
+### 5. Custom Analysis
 ```python
 from tools.mlops_advanced_engine import MLOpsAdvancedEngine
 
