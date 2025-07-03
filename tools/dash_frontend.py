@@ -149,7 +149,8 @@ class PowerAIDashboard:
             dcc.Interval(id='interval-component', interval=30*1000, n_intervals=0),
             dcc.Store(id='ml-results-store'),
             dcc.Store(id='dataset-store'),
-            dcc.Store(id='uploaded-datasets-store', data={})
+            dcc.Store(id='uploaded-datasets-store', data={}),
+            dcc.Download(id="download-pdf")
             
         ], fluid=True)
     
@@ -389,15 +390,16 @@ class PowerAIDashboard:
                 return {'error': str(e)}
         
         @self.app.callback(
-            Output('upload-status', 'children', allow_duplicate=True),
+            [Output('download-pdf', 'data'),
+             Output('upload-status', 'children', allow_duplicate=True)],
             Input('report-button', 'n_clicks'),
             State('dataset-store', 'data'),
             prevent_initial_call=True
         )
         def generate_pdf_report(n_clicks, dataset_json):
-            """Generate comprehensive PDF report"""
+            """Generate comprehensive PDF report and trigger download"""
             if not dataset_json:
-                return dbc.Alert("⚠️ No data selected for report generation", color="warning")
+                return None, dbc.Alert("⚠️ No data selected for report generation", color="warning")
             
             try:
                 print("📄 Starting PDF report generation...")
@@ -412,18 +414,37 @@ class PowerAIDashboard:
                 generator.load_and_analyze_data(sample_size=30000)
                 report_path = generator.generate_pdf_report()
                 
-                return dbc.Alert([
-                    html.I(className="fas fa-file-pdf me-2"),
-                    f"✅ PDF Report Generated Successfully! ",
-                    html.Br(),
-                    html.Small(f"Saved to: {report_path}", className="text-muted")
-                ], color="success")
+                # Read the PDF file for download
+                import os
+                from datetime import datetime
+                
+                if os.path.exists(report_path):
+                    # Generate a user-friendly filename
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    download_filename = f"PowerAI_Report_{timestamp}.pdf"
+                    
+                    # Trigger download
+                    download_data = dcc.send_file(str(report_path), filename=download_filename)
+                    
+                    status_message = dbc.Alert([
+                        html.I(className="fas fa-download me-2"),
+                        f"✅ PDF Report Generated & Downloaded! ",
+                        html.Br(),
+                        html.Small(f"File: {download_filename}", className="text-muted")
+                    ], color="success")
+                    
+                    return download_data, status_message
+                else:
+                    return None, dbc.Alert([
+                        html.I(className="fas fa-exclamation-triangle me-2"),
+                        "❌ PDF file not found after generation"
+                    ], color="danger")
                 
             except Exception as e:
                 print(f"PDF Report Generation Error: {e}")
                 import traceback
                 traceback.print_exc()
-                return dbc.Alert([
+                return None, dbc.Alert([
                     html.I(className="fas fa-exclamation-triangle me-2"),
                     f"❌ Error generating PDF report: {str(e)}"
                 ], color="danger")
